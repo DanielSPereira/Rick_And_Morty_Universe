@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { CharacterCard } from "../CharacterCard"
 import { CharacterInfoModal } from "../CharacterInfoModal"
 import { Filters } from "../Filters"
@@ -7,6 +7,7 @@ import "./styles.css"
 
 
 export function Content() {
+    const toolbar = useRef<HTMLDivElement>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     function handleCloseModal() {
@@ -17,15 +18,30 @@ export function Content() {
         setIsModalOpen(true);
     }
 
+    function fixContentOnTop() {
+        if (window.pageYOffset > toolbar.current?.offsetTop! - 40) {
+            toolbar.current?.classList.add("sticky");
+        } else {
+            toolbar.current?.classList.remove("sticky");
+        }
+    }
+    
+    useEffect(() => {
+        if (!toolbar.current) return;
+
+        window.addEventListener("scroll", fixContentOnTop)
+    }, [])
+
     return (
-        <section className="content">
+        <section className="content w-full">
             <div className="container-content">
-                <div className="toolbar">
+                <div className="toolbar" ref={toolbar}>
                     <SearchBar />
                     <Filters />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 sm:gap-4 gap-12 mt-12">
+                <div className="cards-wrapper">
+                    <CharacterCard handleOpenModal={handleOpenModal} />
                     <CharacterCard handleOpenModal={handleOpenModal} />
                     <CharacterCard handleOpenModal={handleOpenModal} />
                     <CharacterCard handleOpenModal={handleOpenModal} />

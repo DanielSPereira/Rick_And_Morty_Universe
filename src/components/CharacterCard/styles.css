@@ -1,6 +1,6 @@
 .card {
     @apply w-full max-w-xs mx-auto bg-white rounded-lg overflow-hidden;
-    height: auto;
+    height: 336px;
 }
 
 .card img {

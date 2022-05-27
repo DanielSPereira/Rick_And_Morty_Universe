@@ -39,7 +39,7 @@ button {
 }
 
 .container-content {
-  @apply w-full h-full mx-auto pb-4 px-4 grid;
+  @apply w-full mx-auto px-4 grid;
   grid-template-rows: 100px 1fr;
   max-width: 1120px;
 }

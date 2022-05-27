@@ -1,8 +1,23 @@
 .content {
-    @apply w-full pt-12 sm:pt-6;
+    background-color: var(--background);
 }
 
 .toolbar {
-    @apply flex flex-col sm:flex-row items-center sm:justify-between sm:items-end;
+    @apply z-10 w-full h-48 sm:h-32 pb-8 pt-8 flex flex-col sm:flex-row items-center sm:justify-between sm:items-end;
+    background-color: var(--background);
+    max-width: 1120px;
 }
 
+.cards-wrapper {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-12 sm:gap-4 pt-32 sm:pt-20;
+}
+
+.sticky {
+    position: fixed;
+    top: 0;
+    width: 100%;
+}
+  
+.sticky + .cards-wrapper {
+    padding-top: 90px;
+}

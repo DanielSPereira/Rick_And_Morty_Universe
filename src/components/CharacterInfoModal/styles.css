@@ -1,9 +1,24 @@
+.back {
+    @apply absolute w-full py-6 pr-4;
+    transition: opacity .2s;
+    opacity: .5;
+    background-image: linear-gradient(180deg, rgba(0,0,0,.5) 60%, rgba(0,0,0,0) 100%);
+}
+
+.back:hover {
+    opacity: 1;
+}
+
+.back button {
+    @apply block ml-auto;
+}
+
 .modal {
-    @apply w-11/12 md:w-2/6 bg-white rounded-lg overflow-hidden;
+    @apply w-11/12 md:w-2/6 bg-white rounded-lg overflow-hidden relative;
     min-height: 520px;
 }
 
 .overlay-modal {
-    @apply fixed top-0 bottom-0 left-0 right-0 flex justify-center items-center overflow-auto py-4;
+    @apply z-20 fixed top-0 bottom-0 left-0 right-0 flex justify-center items-center overflow-auto py-4;
     background-color: rgba(0, 0, 0, 0.6);
 }

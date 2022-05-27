@@ -1,3 +1,4 @@
+import { FaTimes } from "react-icons/fa";
 import Modal from "react-modal";
 import "./styles.css"
 
@@ -14,6 +15,11 @@ export function CharacterInfoModal({ isModalOpen, handleCloseModal }: ICharacter
             className="modal"
             overlayClassName="overlay-modal"
         >
+            <div className="back">
+                <button type="button" onClick={handleCloseModal}>
+                    <FaTimes size={25} color="white" />
+                </button>
+            </div>
             <img src="https://images5.alphacoders.com/796/796108.jpg" alt="" />
             <div className="w-full py-4 px-8">
                 <h1 className="character-name">Summer Smith</h1>
