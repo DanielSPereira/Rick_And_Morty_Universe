@@ -1,6 +1,6 @@
 .card {
     @apply w-full max-w-xs mx-auto bg-white rounded-lg overflow-hidden;
-    height: 450px;
+    height: auto;
 }
 
 .card img {
@@ -31,5 +31,5 @@
 }
 
 button.view-details {
-    @apply block rounded-lg bg-emerald-600 py-2 mt-4 w-full text-white mx-auto text-center;
+    @apply block hover:brightness-110 duration-150 rounded-lg bg-emerald-600 py-2 mt-4 w-full text-white mx-auto text-center;
 }
