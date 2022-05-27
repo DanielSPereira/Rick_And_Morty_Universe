@@ -1,0 +1,35 @@
+.card {
+    @apply w-full max-w-xs mx-auto bg-white rounded-lg overflow-hidden;
+    height: 450px;
+}
+
+.card img {
+    @apply w-full h-48 object-cover;
+}
+
+.character-name {
+    @apply font-bold text-2xl;
+    color: var(--blue);
+}
+
+.status-circle {
+    @apply inline-block w-2.5 h-2.5 bg-emerald-600 rounded-full;
+}
+
+.status-specie {
+    @apply inline-block ml-2;
+    color: var(--blue);
+}
+
+.sub-title {
+    @apply font-bold;
+    color: var(--light-blue);
+}
+
+.answer {
+    color: var(--blue);
+}
+
+button.view-details {
+    @apply block rounded-lg bg-emerald-600 py-2 mt-4 w-full text-white mx-auto text-center;
+}

@@ -1,0 +1,24 @@
+.header {
+    @apply w-full h-auto;
+    background: var(--blue);
+}
+
+.menu {
+    @apply flex justify-end items-center;
+}
+
+.repository a {
+    @apply mr-5 duration-150 hover:text-slate-400;
+}
+
+.reference a {
+    @apply py-2 px-4 rounded-lg border-2 border-solid border-emerald-600 duration-150 hover:bg-emerald-600;
+}
+
+.menu li a {
+    @apply text-white font-bold no-underline; 
+}
+
+.site-title {
+    @apply font-bold text-white text-7xl mx-auto text-center pt-6 pb-12;
+}

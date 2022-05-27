@@ -1,0 +1,8 @@
+.label-search {
+    @apply w-80 md:w-96 mb-6 sm:mb-0 max-h-11 grid items-center bg-white pl-2 rounded-lg;
+    grid-template-columns: 30px 1fr;
+}
+
+.label-search input {
+    @apply p-2 rounded-lg;
+}

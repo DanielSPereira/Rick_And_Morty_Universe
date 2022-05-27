@@ -1,0 +1,22 @@
+
+.categories-wrapper h1 {
+    @apply mb-2 text-lg;
+    color: var(--blue);
+}
+
+.filter {
+    @apply w-24 h-8 bg-white rounded-2xl text-center;
+    color: var(--blue);
+}
+
+.filter:not(.filter.selected-filter) {
+    @apply hover:bg-emerald-100 duration-150;
+}
+
+.filter:not(.filter:last-of-type) {
+    margin-right: 15px;
+}
+
+button.selected-filter {
+    @apply bg-emerald-600 text-white;
+}

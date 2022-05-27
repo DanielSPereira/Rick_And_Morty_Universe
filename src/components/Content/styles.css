@@ -1,0 +1,8 @@
+.content {
+    @apply w-full pt-12 sm:pt-6;
+}
+
+.toolbar {
+    @apply flex flex-col sm:flex-row items-center sm:justify-between sm:items-end;
+}
+

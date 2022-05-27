@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --blue: #363F5F;
+  --green: #33CC95;
+  --red: #E52E4D;
+
+  --light-blue: #6933FF;
+
+  --background: #ECECEC;
+  --text-title: #363F5F;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: antialiased;
+}
+
+body, input, textarea, button {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6, strong {
+  font-weight: 600;
+}
+
+button {
+  cursor: pointer;
+}
+
+.container-content {
+  @apply w-full h-full mx-auto pb-4 px-4 grid;
+  grid-template-rows: 100px 1fr;
+  max-width: 1120px;
+}
+
+.box-shadow {
+  box-shadow: 0px 0px 12px #44444450;
+}
+
+@media (max-width: 1080px) {
+  html {      
+    font-size: 93.75%;
+  }
+}
+
+@media (max-width: 720px) {
+  html {
+    font-size: 87.5%;
+  } 
+}
