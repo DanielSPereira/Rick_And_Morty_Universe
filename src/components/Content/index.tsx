@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react"
+import { useCharacters } from "../../hooks/useCharacters"
 import { CharacterCard } from "../CharacterCard"
+import { CardSkeletonLoad } from "../CharacterCard/CardSkeletonLoad"
 import { CharacterInfoModal } from "../CharacterInfoModal"
 import { Filters } from "../Filters"
 import { SearchBar } from "../SearchBar"
@@ -8,7 +10,9 @@ import "./styles.css"
 
 export function Content() {
     const toolbar = useRef<HTMLDivElement>(null)
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { characters, loading } = useCharacters();
 
     function handleCloseModal() {
         setIsModalOpen(false);
@@ -19,7 +23,7 @@ export function Content() {
     }
 
     function fixContentOnTop() {
-        if (window.pageYOffset > toolbar.current?.offsetTop! - 40) {
+        if (window.pageYOffset > toolbar.current?.offsetTop! - 10) {
             toolbar.current?.classList.add("sticky");
         } else {
             toolbar.current?.classList.remove("sticky");
@@ -33,7 +37,7 @@ export function Content() {
     }, [])
 
     return (
-        <section className="content w-full">
+        <section className="content">
             <div className="container-content">
                 <div className="toolbar" ref={toolbar}>
                     <SearchBar />
@@ -41,17 +45,26 @@ export function Content() {
                 </div>
 
                 <div className="cards-wrapper">
-                    <CharacterCard handleOpenModal={handleOpenModal} />
-                    <CharacterCard handleOpenModal={handleOpenModal} />
-                    <CharacterCard handleOpenModal={handleOpenModal} />
-                    <CharacterCard handleOpenModal={handleOpenModal} />
-
-                    <CharacterInfoModal 
-                        isModalOpen={isModalOpen}
-                        handleCloseModal={handleCloseModal} 
-                    />
+                    {
+                        loading ? (
+                            <CardSkeletonLoad />
+                        ) : (
+                            characters.map(((character, idx) => (
+                                <CharacterCard
+                                    key={character.name + idx}
+                                    character={character} 
+                                    handleOpenModal={handleOpenModal} 
+                                />
+                            )))
+                        )
+                    }
                 </div>
             </div>
+            
+            <CharacterInfoModal 
+                isModalOpen={isModalOpen}
+                handleCloseModal={handleCloseModal} 
+            />
         </section>
     )
 }

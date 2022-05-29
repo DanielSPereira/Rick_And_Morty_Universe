@@ -3,14 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --blue: #363F5F;
   --green: #33CC95;
   --red: #E52E4D;
 
-  --light-blue: #6933FF;
+  --medium-blue: #112945;
+  --light-blue: #133962;
+  --dark-blue: #0f172a;
 
-  --background: #ECECEC;
-  --text-title: #363F5F;
+  --text-title: #FFFFFF;
+  --text-body: #B2B8F0;
 }
 
 * {
@@ -20,7 +21,7 @@
 }
 
 body {
-  background: var(--background);
+  background: var(--dark-blue);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: antialiased;
 }
@@ -45,7 +46,7 @@ button {
 }
 
 .box-shadow {
-  box-shadow: 0px 0px 12px #44444450;
+  box-shadow: 0px 0px 12px #0f172a;
 }
 
 @media (max-width: 1080px) {

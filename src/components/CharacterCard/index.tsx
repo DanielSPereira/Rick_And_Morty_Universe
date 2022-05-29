@@ -1,35 +1,58 @@
+import { FaStar } from "react-icons/fa";
+import { useCharacters } from "../../hooks/useCharacters";
+import { ICharacter } from "../../context/CharactersContext";
 import "./styles.css"
 
-export function CharacterCard({ handleOpenModal }: { handleOpenModal: () => void }) {
+interface ICharacterCardProps {
+    character: ICharacter;
+    handleOpenModal: () => void;
+}
+
+export function CharacterCard({ character, handleOpenModal }: ICharacterCardProps) {
+    const { selectCharacter } = useCharacters();
+
     return (
         <div className="card box-shadow">
-            <img src="https://images5.alphacoders.com/796/796108.jpg" alt="" />
-            <div className="w-full p-4">
-                <h1 className="character-name">Summer Smith</h1>
+            <img src={ character.image } alt={ character.name } />
 
-                <span className="block">
-                    <span className="status-circle"></span>
-                    <p className="status-specie">Alive - Human</p>
+            <span className="block flex flex-col justify-between  px-4 my-4">
+                <span>
+                    <span className="flex items-center justify-between">
+                        <h1 className="character-name">{ character.name }</h1>
+
+                        <button type="button">
+                            <FaStar size={22} color="white" />
+                        </button>
+                    </span>
+
+                    <span className="block">
+                        { 
+                            character.status == "Dead" ? (
+                                <span className="status-circle dead"></span>
+                            ) : (
+                                <span className="status-circle alive"></span>
+                            )
+                        }
+                        <p className="status-specie">{ character.status } - { character.species }</p>
+                    </span>
+
+                    <span className="block mt-3">
+                        <span className="sub-title">First seen in:</span>
+                        <p className="answer">{ character.episode[0].name }</p>
+                    </span>
                 </span>
-                
-                {/* <span className="block mt-3">
-                    <span className="sub-title">Last known location:</span>
-                    <p className="answer">Earth &#40;Replacement Dimension&#41;</p>
-                </span> */}
-
-                {/* <span className="block mt-3">
-                    <span className="sub-title">First seen in:</span>
-                    <p className="answer">Mortynight Run</p>
-                </span> */}
 
                 <button 
                     type="button" 
                     className="view-details" 
-                    onClick={handleOpenModal}
-                >
+                    onClick={() => {
+                        selectCharacter(character.id);
+                        handleOpenModal();
+                    }}
+                    >
                     More Details
                 </button>
-            </div>
+            </span>
         </div>
     )
 }

@@ -1,3 +1,4 @@
+import { CharactersProvider } from "./context/CharactersContext"
 import { Content } from "./components/Content"
 import { Header } from "./components/Header"
 
@@ -7,7 +8,9 @@ function App() {
     <div className="App">
       <Header />
 
-      <Content />
+      <CharactersProvider>
+        <Content />
+      </CharactersProvider>
     </div>
   )
 }

@@ -1,16 +1,16 @@
 
 .categories-wrapper h1 {
     @apply mb-2 text-lg;
-    color: var(--blue);
+    color: var(--text-title);
 }
 
 .filter {
-    @apply w-24 h-8 bg-white rounded-2xl text-center;
-    color: var(--blue);
+    @apply duration-150 w-auto h-auto px-4 py-1 bg-white rounded-2xl text-center border border-emerald-600;
+    color: var(--text-body);
 }
 
-.filter:not(.filter.selected-filter) {
-    @apply hover:bg-emerald-100 duration-150;
+.filter:not(.filter.selected-filter):hover {
+    @apply text-white;
 }
 
 .filter:not(.filter:last-of-type) {

@@ -1,6 +1,6 @@
 .header {
     @apply w-full h-auto;
-    background: var(--blue);
+    background: radial-gradient(circle, var(--light-blue) 0%, var(--dark-blue) 100%);
 }
 
 .menu {

@@ -1,8 +1,20 @@
 .label-search {
-    @apply w-80 md:w-96 mb-6 sm:mb-0 max-h-11 grid items-center bg-white pl-2 rounded-lg;
+    @apply w-80 md:w-96 mb-6 sm:mb-0 max-h-11 grid items-center bg-white pl-2 rounded-lg border border-emerald-600;
     grid-template-columns: 30px 1fr;
 }
 
 .label-search input {
     @apply p-2 rounded-lg;
+}
+
+.label-search input::placeholder {
+    color: var(--medium-blue);
+}
+  
+.label-search input:-ms-input-placeholder {
+    color: var(--medium-blue);
+}
+
+.label-search input::-ms-input-placeholder {
+    color: var(--medium-blue);
 }

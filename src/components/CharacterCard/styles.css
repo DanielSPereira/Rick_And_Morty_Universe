@@ -1,35 +1,48 @@
 .card {
-    @apply w-full max-w-xs mx-auto bg-white rounded-lg overflow-hidden;
-    height: 336px;
+    @apply w-full grid mx-auto bg-white rounded-lg overflow-hidden;
+    background: linear-gradient(80deg, var(--medium-blue) 0%, var(--medium-blue) 100%);
+    grid-template-columns: .5fr 1fr;
+    min-height: 220px;
 }
 
 .card img {
-    @apply w-full h-48 object-cover;
+    @apply w-full h-full object-cover object-center;
+    max-width: 220px;
 }
 
 .character-name {
     @apply font-bold text-2xl;
-    color: var(--blue);
+    color: var(--text-title);
 }
 
 .status-circle {
-    @apply inline-block w-2.5 h-2.5 bg-emerald-600 rounded-full;
+    @apply inline-block w-2.5 h-2.5 rounded-full;
 }
 
 .status-specie {
     @apply inline-block ml-2;
-    color: var(--blue);
+    color: var(--text-body);
 }
+
+.alive {
+    @apply bg-emerald-600;
+}
+
+.dead {
+    background-color: var(--red);
+}
+
 
 .sub-title {
     @apply font-bold;
-    color: var(--light-blue);
+    color: var(--text-title);
 }
 
 .answer {
-    color: var(--blue);
+    color: var(--text-body);
 }
 
 button.view-details {
-    @apply block hover:brightness-110 duration-150 rounded-lg bg-emerald-600 py-2 mt-4 w-full text-white mx-auto text-center;
+    @apply block hover:brightness-110 duration-150 rounded-lg bg-emerald-600 py-2 mt-4 w-full mx-auto text-center;
+    color: var(--text-title);
 }
