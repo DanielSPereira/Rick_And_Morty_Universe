@@ -27,15 +27,17 @@ export interface ICharacter {
 }
 
 interface ICharactersContext { 
+    setPage: React.Dispatch<React.SetStateAction<"Favorites" | "Explore">>;
+    changeSearchFilter: (name: string) => void;
+    favoriteCharacter: (id: string) => void;
     selectFilter: (filter: string) => void;
     selectCharacter: (id: string) => void;
-    favoriteCharacter: (id: string) => void;
     searchForCharacter: () => void;
-    changeSearchFilter: (name: string) => void;
-    selectedCharacter: ICharacter | null;
     favoriteCharacters: ICharacter[] | null;
-    characters: ICharacter[]; 
+    selectedCharacter: ICharacter | null;
+    page: "Favorites" | "Explore";
     selectedFilters: string[];
+    characters: ICharacter[]; 
     filters: string[];
     loading: boolean;
 }
@@ -66,12 +68,13 @@ const GET_CHARACTERS = gql`
 `;
 
 export const CharactersProvider = ({ children }: { children: React.ReactNode }) => {
+    const [selectedCharacter, setSelectedCharacter] = useState<ICharacter | null>(null);
     const [favoriteCharacters, setFavoriteCharacters] = useState<ICharacter[]>([]);
     const [selectedFilters, setSelectedFilters] = useState<string[]>(["All"]);
-    const [searchFilter, setSearchFilter] = useState<string>("");
-    const [selectedCharacter, setSelectedCharacter] = useState<ICharacter | null>(null);
-    const [filters, setFilters] = useState<string[]>([]);
     const [characters, setCharacters] = useState<ICharacter[]>([]);
+    const [searchFilter, setSearchFilter] = useState<string>("");
+    const [filters, setFilters] = useState<string[]>([]);
+    const [page, setPage] = useState<"Favorites" | "Explore">("Explore");
 
     const [executeSearch, { data, loading }] = useLazyQuery(
         GET_CHARACTERS
@@ -107,28 +110,43 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
                 return selectedFilters.filter(selectedFilter => selectedFilter != filter);
             }
 
+            if (state.includes(filter) && state.length == 1) {
+                return state;
+            }
+            
             return [...selectedFilters, filter];
         });
     }
 
     function favoriteCharacter(id: string) {
+        const alreadyFavorite = !!favoriteCharacters.find(fc => fc.id == id);
+
+        if (alreadyFavorite) {
+            return setFavoriteCharacters(state => state.filter(fc => fc.id != id));
+        }
+
         const newFavoriteCharacter = characters.find(character => character.id == id);
 
-        newFavoriteCharacter && setFavoriteCharacters([...favoriteCharacters, newFavoriteCharacter])
+        newFavoriteCharacter && setFavoriteCharacters([...favoriteCharacters, newFavoriteCharacter]);
     }
 
-    function getCategories() {
+    const getCategories = useMemo(() => {
+        if (!data) return;
         let categories: string[] = [];
 
         data?.characters?.results.map((character: ICharacter) => 
-            !categories.includes(character.species) && categories.push(character.species));
+            !categories.includes(character.species) && categories.push(character.species));    
         
         setFilters(categories)
-    }
+        setSelectedFilters(["All"])
+    }, [data])
 
-    function getCharacters() {
-        setCharacters(data.characters.results);    
-    } 
+    const getCharacters = useMemo(
+        () => {
+            if (!data) return;
+            setCharacters(data.characters.results)
+        }, [data]
+    )
 
     const charactersFiltered = useMemo(() => {
         return characters.filter(
@@ -145,9 +163,6 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
             })
             return;
         } 
-    
-        getCategories();
-        getCharacters();
     }, [data])
 
     return (
@@ -158,6 +173,8 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
                 selectCharacter,
                 selectFilter,
                 changeSearchFilter,
+                setPage,
+                page,
                 selectedCharacter,
                 favoriteCharacters,
                 filters,

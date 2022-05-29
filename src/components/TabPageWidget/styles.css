@@ -1,0 +1,17 @@
+.widget-anchor {
+    @apply fixed z-50 flex items-center bg-emerald-600 justify-center right-4 bottom-12 md:right-8 rounded-full text-white duration-200 hover:brightness-150;
+    width: 50px;
+    height: 50px;
+    background-color: var(--light-blue);
+}
+
+.popover {
+    @apply fixed z-50 px-6 bottom-28 right-14 rounded-md grid text-white;
+    width: 200px;
+    height: 100px;
+    background-color: var(--light-blue);
+}
+
+.selected-page {
+    color: yellow;
+}

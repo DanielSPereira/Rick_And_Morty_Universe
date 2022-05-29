@@ -1,5 +1,7 @@
 import { CharactersProvider } from "./context/CharactersContext"
-import { Content } from "./components/Content"
+import { TabPageWidget } from "./components/TabPageWidget"
+import { CardsList } from "./components/CardsList"
+import { Toolbar } from "./components/Toolbar"
 import { Header } from "./components/Header"
 
 function App() {
@@ -7,10 +9,14 @@ function App() {
   return (
     <div className="App">
       <Header />
-
+      
       <CharactersProvider>
-        <Content />
+        <Toolbar />
+        <TabPageWidget />
+        <CardsList />
       </CharactersProvider>
+
+
     </div>
   )
 }

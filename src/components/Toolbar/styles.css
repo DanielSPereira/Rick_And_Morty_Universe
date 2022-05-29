@@ -1,0 +1,24 @@
+.toolbar {
+    @apply z-10 w-full;
+    background-image: radial-gradient(circle, var(--dark-blue) 0%, var(--dark-blue) 100%);
+    background-size:100% 0%, cover;
+    background-position:0 0, center;
+    background-repeat: no-repeat;
+    -webkit-transition: .2s;
+    -moz-transition: .2s;
+    -o-transition: .2s;
+    -ms-transition: .2s;
+    transition: .2s;
+}
+
+.toolbar-wrapper {
+    @apply h-full pt-8 pb-6 flex flex-col items-center sm:flex-row sm:items-end sm:justify-between;
+}
+
+.sticky {
+    background-image: radial-gradient(circle, var(--light-blue) 0%, var(--dark-blue) 100%);
+    top: -1px;
+    position: fixed;
+    transition: .2s;
+    background-size: 100% 100%, cover;
+}

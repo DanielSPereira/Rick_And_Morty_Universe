@@ -6,7 +6,7 @@ export function Filters() {
     const { filters, selectedFilters, selectFilter } = useCharacters();
 
     return (
-        <div className="categories-wrapper flex flex-col justify-center items-center sm:items-start">
+        <div className="categories-wrapper">
             <h1>Categories:</h1>
             { 
                 !filters.length ? (

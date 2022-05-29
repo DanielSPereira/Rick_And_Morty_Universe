@@ -10,6 +10,14 @@
     max-width: 220px;
 }
 
+.star-btn {
+    @apply duration-200;
+}
+
+.star-btn:hover {
+    filter: brightness(0.7);
+}
+
 .character-name {
     @apply font-bold text-2xl;
     color: var(--text-title);

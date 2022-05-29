@@ -2,6 +2,7 @@ import { FaStar } from "react-icons/fa";
 import { useCharacters } from "../../hooks/useCharacters";
 import { ICharacter } from "../../context/CharactersContext";
 import "./styles.css"
+import { useMemo } from "react";
 
 interface ICharacterCardProps {
     character: ICharacter;
@@ -9,7 +10,11 @@ interface ICharacterCardProps {
 }
 
 export function CharacterCard({ character, handleOpenModal }: ICharacterCardProps) {
-    const { selectCharacter } = useCharacters();
+    const { selectCharacter, favoriteCharacter, favoriteCharacters } = useCharacters();
+
+    const isFavorite = useMemo(() => {
+        return !!favoriteCharacters?.find((fc) => fc.id == character.id);
+    }, [favoriteCharacters])
 
     return (
         <div className="card box-shadow">
@@ -20,8 +25,8 @@ export function CharacterCard({ character, handleOpenModal }: ICharacterCardProp
                     <span className="flex items-center justify-between">
                         <h1 className="character-name">{ character.name }</h1>
 
-                        <button type="button">
-                            <FaStar size={22} color="white" />
+                        <button onClick={() => favoriteCharacter(character.id)} type="button" className="star-btn">
+                            <FaStar size={22} color={isFavorite ? "yellow" : "white"} />
                         </button>
                     </span>
 

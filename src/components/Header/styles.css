@@ -3,6 +3,11 @@
     background: radial-gradient(circle, var(--light-blue) 0%, var(--dark-blue) 100%);
 }
 
+.header > .container-content {
+    @apply grid;
+    grid-template-rows: 100px 1fr;
+}
+
 .menu {
     @apply flex justify-end items-center;
 }
@@ -20,5 +25,5 @@
 }
 
 .site-title {
-    @apply font-bold text-white text-7xl mx-auto text-center pt-6 pb-12;
+    @apply font-bold text-white text-7xl mx-auto text-center pt-6 pb-10;
 }
