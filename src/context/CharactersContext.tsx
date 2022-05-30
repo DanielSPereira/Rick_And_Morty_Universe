@@ -23,11 +23,10 @@ export interface ICharacter {
 }
 
 interface ICharactersContext { 
-    changeSearchFilter: (name: string) => void;
     favoriteCharacter: (id: string) => void;
     selectFilter: (filter: string) => void;
     selectCharacter: (id: string) => void;
-    searchForCharacter: () => void;
+    searchForCharacter: (name: string) => void;
     handleChangePage: (event: React.ChangeEvent<unknown>, page: number) => void;
     favoriteCharacters: ICharacter[] | null;
     selectedCharacter: ICharacter | null;
@@ -72,21 +71,68 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
     const [selectedCharacter, setSelectedCharacter] = useState<ICharacter | null>(null);
     const [favoriteCharacters, setFavoriteCharacters] = useState<ICharacter[]>([]);
     const [selectedFilters, setSelectedFilters] = useState<string[]>(["All"]);
-    const [characters, setCharacters] = useState<ICharacter[]>([]);
+    const [pagesAmount, setPagesAmount] = useState<number>(1);
     const [searchFilter, setSearchFilter] = useState<string>("");
-    const [pagesAmount, setPagesAmount] = useState<number>(0);
-    const [filters, setFilters] = useState<string[]>([]);
     const [page, setPage] = useState<number>(1);
 
     const [executeSearch, { data, loading }] = useLazyQuery(
         GET_CHARACTERS
     );
 
-    const searchForCharacter = useCallback(() => {
+    const searchForCharacter = useCallback((name: string) => {
+        setSearchFilter(name);
+
         executeSearch({
-            variables: { FilterCharacter: searchFilter, page: page }
+            variables: { FilterCharacter: name, page: page }
         })
     }, [searchFilter]);
+
+    const getCategories = useMemo((): string[] => {
+        if (!data) return ["All"];
+        
+        let categories: string[] = [];
+
+        data?.characters?.results.filter(
+            (character: ICharacter) => !categories.includes(character.species) && categories.push(character.species)
+        );    
+    
+        setSelectedFilters(["All"]);
+
+        return ["All", "Favorites", ...categories];
+    }, [data])
+    
+    const charactersFiltered = useMemo(() => {
+        if (!data) return [];
+
+        if (selectedFilters.includes("Favorites") && selectedFilters.length == 1) {
+            return favoriteCharacters;
+        }
+        
+        if (selectedFilters.includes("Favorites") && selectedFilters.length > 1) {
+            return data.characters.results.filter(
+                (character: ICharacter) =>
+                    !!favoriteCharacters.find(fc => fc.id == character.id) && selectedFilters.includes(character.species) 
+            )           
+        }
+        return data.characters.results.filter((character: ICharacter) => {
+            if (selectedFilters.includes("All")) return character;
+
+            if (selectedFilters.includes(character.species)) return character;
+        })        
+    }, [selectedFilters, data, favoriteCharacters])
+
+    const getPagesAmount = useMemo(() => {
+        if (!data) return pagesAmount;
+
+        setPagesAmount(data.characters.info.pages)
+    }, [data])
+
+
+    function selectCharacter(id: string) {
+        const newSelectedCharacter = charactersFiltered?.find((character: ICharacter) => character.id === id);
+
+        setSelectedCharacter(newSelectedCharacter || null);
+    }
 
     function handleChangePage(event: React.ChangeEvent<unknown>, page: number) {
         setPage(page);
@@ -94,16 +140,6 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         executeSearch({
             variables: { FilterCharacter: searchFilter, page: page }
         })
-    }
-    
-    function changeSearchFilter(name: string) {
-        setSearchFilter(name);
-    }
-
-    function selectCharacter(id: string) {
-        const newSelectedCharacter = characters?.find((character: ICharacter) => character.id === id);
-
-        setSelectedCharacter(newSelectedCharacter || null);
     }
 
     function selectFilter(filter: string) {
@@ -135,46 +171,10 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
             return setFavoriteCharacters(state => state.filter(fc => fc.id != id));
         }
 
-        const newFavoriteCharacter = characters.find(character => character.id == id);
+        const newFavoriteCharacter = charactersFiltered.find((character: ICharacter) => character.id == id);
 
         newFavoriteCharacter && setFavoriteCharacters([...favoriteCharacters, newFavoriteCharacter]);
     }
-
-    const getCategories = useMemo(() => {
-        if (!data) return;
-        let categories: string[] = [];
-
-        data?.characters?.results.map((character: ICharacter) => 
-            !categories.includes(character.species) && categories.push(character.species));    
-        
-        setFilters(["All", "Favorites", ...categories])
-        setSelectedFilters(["All"])
-    }, [data])
-
-    const getCharacters = useMemo(() => {
-            if (!data) return;
-            setCharacters(data.characters.results)
-    }, [data])
-
-    const getPagesAmount = useMemo(() => {
-        if (!data) return;
-
-        const pages = data.characters.info.pages;
-
-        setPagesAmount(pages);
-    }, [data])
-
-    const charactersFiltered = useMemo(() => {
-        return characters.filter((character) => {
-            if (selectedFilters.includes("All")) return character;
-
-            if (selectedFilters.includes(character.species)) return character;
-
-            if (selectedFilters.includes("Favorites") && !!favoriteCharacters.find(fc => fc.id == character.id)) return character;
-             
-            
-            })        
-    }, [selectedFilters, characters, favoriteCharacters])
 
     useEffect(() => {
         if (!data) {
@@ -188,21 +188,20 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
     return (
         <CharactersContext.Provider 
             value={{ 
+                characters: charactersFiltered,
+                pagesAmount: pagesAmount,
+                favoriteCharacters,
+                selectedCharacter,
+                selectedFilters,
+                searchFilter,
+                filters: getCategories,
+                loading, 
+                page,
                 searchForCharacter,
                 favoriteCharacter,
+                handleChangePage,
                 selectCharacter,
                 selectFilter,
-                changeSearchFilter,
-                handleChangePage,
-                page,
-                selectedCharacter,
-                favoriteCharacters,
-                searchFilter,
-                filters,
-                selectedFilters,
-                characters: charactersFiltered,
-                pagesAmount,
-                loading, 
             }}
         >
             { children }

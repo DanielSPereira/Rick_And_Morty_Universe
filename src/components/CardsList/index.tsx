@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { CharacterCard } from "../CharacterCard";
 import { useCharacters } from "../../hooks/useCharacters";
 import { Pagination } from '@mui/material';
@@ -15,16 +15,17 @@ export function CardsList() {
         loading, 
         page, 
         pagesAmount, 
+        selectedFilters,
         handleChangePage, 
     } = useCharacters();
 
-    function handleCloseModal() {
+    const handleCloseModal = useCallback(() => {
         setIsModalOpen(false);
-    }
+    }, []);
     
-    function handleOpenModal() {
+    const handleOpenModal = useCallback(() => {
         setIsModalOpen(true);
-    }
+    }, []);
 
     return (
         <div className="container-content pb-12">
@@ -34,39 +35,48 @@ export function CardsList() {
                             <CardSkeletonLoad />
                     </div>
                 ) : !loading && characters.length ? (
-                    characters.map((character, idx) => (
-                        <CharacterCard
-                            key={character.name + idx}
-                            character={character} 
-                            handleOpenModal={handleOpenModal} 
-                        />
-                    ))
+                    <div className="cards-wrapper">
+                        {
+                            characters.map((character, idx) => (
+                                <CharacterCard
+                                    key={character.name + idx}
+                                    character={character} 
+                                    handleOpenModal={handleOpenModal} 
+                                />
+                            ))
+                        }
+                    </div>
                 ) : !loading && !characters.length ? (
                     <h1 className="block mx-auto text-center text-white text-3xl py-48">
                         Could not find characters that match this filter!
                     </h1>
                 ) : ""
             }            
-            <div className="flex justify-center">
-                <Pagination
-                    sx={{
-                        "& button.MuiButtonBase-root": {
-                            color: "white !important",
-                            fontSize: "1rem"
-                        }
-                    }}
-                    color="primary"
-                    variant="outlined"
-                    page={page}
-                    count={pagesAmount}
-                    onChange={handleChangePage}
-                />
-            </div>
+            {
+                !selectedFilters.includes("Favorites") ?
+                    <div className="flex justify-center">
+                        <Pagination
+                            sx={{
+                                "& button.MuiButtonBase-root, div.MuiPaginationItem-root": {
+                                    color: "white !important",
+                                    border: "1px solid #133962",
+                                    fontSize: "1rem"
+                                }
+                            }}
+                            color="primary"
+                            variant="outlined"
+                            page={page}
+                            count={pagesAmount}
+                            onChange={handleChangePage}
+                        />
+                    </div> 
+                    : <></>
+            }
 
             <CharacterInfoModal 
                 isModalOpen={isModalOpen}
                 handleCloseModal={handleCloseModal} 
-                />
+            />
         </div>
     )
 }

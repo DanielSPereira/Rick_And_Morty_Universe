@@ -4,14 +4,14 @@ import { FilterSkeletonLoad } from "./FilterSkeletonLoad";
 import "./styles.css"
 
 export function Filters() {
-    const { filters, selectedFilters, selectFilter } = useCharacters();
+    const { filters, selectedFilters, selectFilter, loading } = useCharacters();
 
     return (
         <div className="categories-wrapper">
             <h1>Categories:</h1>
             {
-                !filters.length ? (
-                    <div className="flex">
+                loading ? (
+                    <div className="grid grid-cols-3 gap-4">
                         <FilterSkeletonLoad />
                     </div>
                 ) : (

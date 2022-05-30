@@ -1,7 +1,7 @@
 import { ICharacter } from "../../context/CharactersContext";
 import { useCharacters } from "../../hooks/useCharacters";
 import { FaStar } from "react-icons/fa";
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import "./styles.css"
 interface ICharacterCardProps {
@@ -9,7 +9,7 @@ interface ICharacterCardProps {
     handleOpenModal: () => void;
 }
 
-export function CharacterCard({ character, handleOpenModal }: ICharacterCardProps) {
+function CharacterCardComponent({ character, handleOpenModal }: ICharacterCardProps) {
     const { selectCharacter, favoriteCharacter, favoriteCharacters } = useCharacters();
 
     const isFavorite = useMemo(() => {
@@ -64,3 +64,7 @@ export function CharacterCard({ character, handleOpenModal }: ICharacterCardProp
         </div>
     )
 }
+
+export const CharacterCard = memo(CharacterCardComponent, (prevProps, nextProps) => {
+    return Object.is(prevProps.character, nextProps.character)
+});

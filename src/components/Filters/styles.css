@@ -24,3 +24,7 @@
 button.selected-filter {
     @apply bg-emerald-600 text-white;
 }
+
+.filter-skeleton + .filter-skeleton {
+    margin-right: 15px;
+}
