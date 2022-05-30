@@ -14,16 +14,12 @@ export interface ILocation {
 export interface ICharacter {
     id: string;
     name: string;
+    image: string;
     status: string;
     species: string;
-    type: string;
-    gender: string;
-    origin: string;
-    location : ILocation;
-    image: string;
-    episode: IEpisode[];
-    url: string;
     created: string;
+    episode: IEpisode[];
+    location : ILocation;
 }
 
 interface ICharactersContext { 
@@ -38,13 +34,14 @@ interface ICharactersContext {
     page: "Favorites" | "Explore";
     selectedFilters: string[];
     characters: ICharacter[]; 
+    searchFilter: string;
     filters: string[];
     loading: boolean;
 }
 
 export const CharactersContext = createContext<ICharactersContext>({} as ICharactersContext);
 
-const GET_CHARACTERS = gql`
+export const GET_CHARACTERS = gql`
     query FeedSearchQuery($FilterCharacter: String) { 
         characters(page: 1, filter: { name: $FilterCharacter }) {
             results {
@@ -64,7 +61,7 @@ const GET_CHARACTERS = gql`
                 }
             }
         }
-}
+    }
 `;
 
 export const CharactersProvider = ({ children }: { children: React.ReactNode }) => {
@@ -137,7 +134,7 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         data?.characters?.results.map((character: ICharacter) => 
             !categories.includes(character.species) && categories.push(character.species));    
         
-        setFilters(categories)
+        setFilters([...categories, "All"])
         setSelectedFilters(["All"])
     }, [data])
 
@@ -177,6 +174,7 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
                 page,
                 selectedCharacter,
                 favoriteCharacters,
+                searchFilter,
                 filters,
                 selectedFilters,
                 characters: charactersFiltered,

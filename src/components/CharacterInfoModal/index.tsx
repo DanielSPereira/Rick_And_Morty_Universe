@@ -1,8 +1,8 @@
+import { useCharacters } from "../../hooks/useCharacters";
 import { FaStar, FaTimes } from "react-icons/fa";
 import Modal from "react-modal";
 
 import "./styles.css"
-import { useCharacters } from "../../hooks/useCharacters";
 
 interface ICharacterInfoModalProps { 
     isModalOpen: boolean;
@@ -13,7 +13,6 @@ export function CharacterInfoModal({ isModalOpen, handleCloseModal }: ICharacter
     const { selectedCharacter } = useCharacters();
 
     function getFormattedDate(date: string) {
-        console.log(selectedCharacter)
         let newDate = new Date(date);
         let formattedDate = `${newDate.toLocaleString("en-US", { month: "long" })} ${newDate.getDay()}, ${newDate.getFullYear()}`
 
@@ -24,8 +23,10 @@ export function CharacterInfoModal({ isModalOpen, handleCloseModal }: ICharacter
         <Modal 
             isOpen={isModalOpen} 
             onRequestClose={handleCloseModal}
-            className="modal"
             overlayClassName="overlay-modal"
+            className="modal"
+            ariaHideApp={false}
+            contentLabel="modal"
         >
             <div className="back">
                 <button type="button">
@@ -35,12 +36,13 @@ export function CharacterInfoModal({ isModalOpen, handleCloseModal }: ICharacter
                     <FaTimes size={25} color="white" />
                 </button>
             </div>
+
             <img src={ selectedCharacter?.image } alt={ selectedCharacter?.name } />
 
             <div className="w-full py-4 px-8">
-                <h1 className="character-name">{ selectedCharacter?.name }</h1>
+                <h1 data-testid="character-modal-name" className="character-name">{ selectedCharacter?.name }</h1>
 
-                <span className="block">
+                <span data-testid="character-modal-status" className="block">
                     { 
                         selectedCharacter?.status == "Dead" ? (
                             <span className="status-circle dead"></span>
@@ -53,24 +55,24 @@ export function CharacterInfoModal({ isModalOpen, handleCloseModal }: ICharacter
                 
                 <span className="block mt-3">
                     <span className="sub-title">Last known location:</span>
-                    <p className="answer">{ selectedCharacter?.location?.name }</p>
+                    <p data-testid="modal-last-known-location" className="answer">{ selectedCharacter?.location?.name }</p>
                 </span>
 
                 <span className="block mt-3">
                     <span className="sub-title">First seen in:</span>
-                    <p className="answer">{ selectedCharacter?.episode[0]?.name }</p>
+                    <p data-testid="first-seen-modal" className="answer">{ selectedCharacter?.episode[0]?.name }</p>
                 </span>
 
                 <span className="block mt-3">
                     <span className="sub-title">Episodes Amount:</span>
-                    <p className="answer">{ selectedCharacter?.episode?.length }</p>
+                    <p data-testid="modal-episode-amount" className="answer">{ selectedCharacter?.episode?.length }</p>
                 </span>
 
                 <span className="block mt-3">
                     <span className="sub-title">Creation Date:</span>
-                    <p className="answer">{ getFormattedDate(selectedCharacter?.created!) }</p>
+                    <p data-testid="modal-character-created" className="answer">{ getFormattedDate(selectedCharacter?.created!) }</p>
                 </span>
-        </div>
+            </div>
 
         </Modal>
     )

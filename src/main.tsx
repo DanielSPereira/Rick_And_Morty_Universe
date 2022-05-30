@@ -1,12 +1,10 @@
 import App from './App'
 import React from 'react'
-import Modal from 'react-modal';
 import ReactDOM from 'react-dom/client'
-import './index.css'
 import { ApolloProvider } from '@apollo/client';
 import { client } from './lib/apollo';
 
-Modal.setAppElement('#root');
+import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
