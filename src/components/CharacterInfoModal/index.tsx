@@ -3,6 +3,7 @@ import { FaStar, FaTimes } from "react-icons/fa";
 import Modal from "react-modal";
 
 import "./styles.css"
+import { useMemo } from "react";
 
 interface ICharacterInfoModalProps { 
     isModalOpen: boolean;
@@ -10,7 +11,11 @@ interface ICharacterInfoModalProps {
 }
 
 export function CharacterInfoModal({ isModalOpen, handleCloseModal }: ICharacterInfoModalProps) {
-    const { selectedCharacter } = useCharacters();
+    const { selectedCharacter, favoriteCharacter, favoriteCharacters } = useCharacters();
+
+    const isFavorite = useMemo(() => {
+        return !!favoriteCharacters?.find((fc) => fc.id == selectedCharacter?.id);
+    }, [favoriteCharacters, selectedCharacter])
 
     function getFormattedDate(date: string) {
         let newDate = new Date(date);
@@ -29,8 +34,8 @@ export function CharacterInfoModal({ isModalOpen, handleCloseModal }: ICharacter
             contentLabel="modal"
         >
             <div className="back">
-                <button type="button">
-                    <FaStar size={22} color="white" />
+                <button type="button" onClick={() => favoriteCharacter(selectedCharacter?.id!)}>
+                    <FaStar size={22} color={!!isFavorite ? "yellow" : "white"} />
                 </button>
                 <button type="button" onClick={handleCloseModal}>
                     <FaTimes size={25} color="white" />

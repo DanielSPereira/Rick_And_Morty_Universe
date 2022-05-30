@@ -1,5 +1,4 @@
 import { CharactersProvider } from "./context/CharactersContext"
-import { TabPageWidget } from "./components/TabPageWidget"
 import { CardsList } from "./components/CardsList"
 import { Toolbar } from "./components/Toolbar"
 import { Header } from "./components/Header"
@@ -12,11 +11,9 @@ function App() {
       
       <CharactersProvider>
         <Toolbar />
-        <TabPageWidget />
+        
         <CardsList />
       </CharactersProvider>
-
-
     </div>
   )
 }

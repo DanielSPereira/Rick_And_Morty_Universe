@@ -6,10 +6,10 @@ export function Header() {
             <div className="container-content">
                 <ul className="menu">
                     <li className="repository">
-                        <a href="#">Repository</a>
+                        <a href="https://github.com/DanielSPereira/Rick_And_Morty_Universe" target="_blank">Repository</a>
                     </li>
                     <li className="reference">
-                        <a href="#">Reference</a>
+                        <a href="https://rickandmortyapi.com/" target="_blank">Reference</a>
                     </li>
                 </ul>
 

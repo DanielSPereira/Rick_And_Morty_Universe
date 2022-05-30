@@ -1,6 +1,6 @@
 .back {
     @apply flex justify-end opacity-50 transition-opacity duration-200 absolute w-full py-6 pr-4;
-    background-image: linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(9,9,9,0) 100%);
+    background-image: linear-gradient(180deg, rgba(0,0,0,.8) 20%, rgba(1,1,1,0.0) 100%);
 }
 
 .back:hover {
