@@ -245,7 +245,7 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
     }, [selectedFilters])
     
     useEffect(() => getFavoritePagesAmount(createFavoriteCharactersPagination), [createFavoriteCharactersPagination])
-
+    
     return (
         <CharactersContext.Provider 
             value={{ 
