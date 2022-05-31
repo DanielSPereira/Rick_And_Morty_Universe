@@ -11,13 +11,14 @@ Aonde é possível ver informações detalhadas de cada personagem e adicioná-l
 ## Rodando localmente
 
 Clone o projeto
+
 ``
   git clone https://github.com/DanielSPereira/Rick_And_Morty_Universe.git
 ``
 Instale as dependências
-``
-  yarn
-``  
+
+> yarn
+  
 Inicie o servidor
 ``
   yarn dev
