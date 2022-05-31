@@ -14,6 +14,7 @@ Clone o projeto:
 ``
   git clone https://github.com/DanielSPereira/Rick_And_Morty_Universe.git
 ``.
+
 Instale as dependências:
 
 > yarn
