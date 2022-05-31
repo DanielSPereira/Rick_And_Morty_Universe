@@ -241,7 +241,6 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
     }, [data])
 
     useEffect(() => {
-        console.log(selectedFilters)
     }, [selectedFilters])
     
     useEffect(() => getFavoritePagesAmount(createFavoriteCharactersPagination), [createFavoriteCharactersPagination])
