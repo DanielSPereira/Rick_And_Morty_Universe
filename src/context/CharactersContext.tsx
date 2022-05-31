@@ -106,6 +106,8 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
             (character: ICharacter) => 
                 !filters.includes(character.species) && filters.push(character.species)
         );
+        
+        setSelectedFilters(["All"])
     
         return ["All", ...filters];
     }, [data])
