@@ -6,6 +6,7 @@ import { CharacterInfoModal } from "../CharacterInfoModal";
 import { CardSkeletonLoad } from "../CharacterCard/CardSkeletonLoad";
 
 import "./styles.css"
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 
 export function CardsList() {    
@@ -15,9 +16,13 @@ export function CardsList() {
         loading, 
         page, 
         pagesAmount, 
-        selectedFilters,
-        handleChangePage, 
+        showFavoritePage,
+        favoriteCharacters,
+        handleChangePage,
+        setSearchFilter,
+        setShowFavoritePage
     } = useCharacters();
+    console.log(favoriteCharacters)
 
     const handleCloseModal = useCallback(() => {
         setIsModalOpen(false);
@@ -28,11 +33,64 @@ export function CardsList() {
     }, []);
 
     return (
-        <div className="container-content pb-12">
+        <div className="container-content pb-12 mt-20 md:mt-16">
+            <div className="flex justify-between mb-6">
+                <button 
+                    className={
+                        !showFavoritePage ? 
+                            "explore-button disabled" :
+                            "explore-button enable" 
+                    } 
+                    disabled={!showFavoritePage}
+                    type="button" 
+                    onClick={() => {
+                        setSearchFilter("")
+                        setShowFavoritePage(false)
+                    }}
+                >
+                    <FaArrowLeft size={20} className="arrow-icon" />
+                    <h1>Explore</h1>
+                </button>
+                <button 
+                    className={
+                        !favoriteCharacters?.length && !showFavoritePage || showFavoritePage ? 
+                            "favorite-button disabled" :
+                            "favorite-button enable" 
+                    } 
+                    disabled={!favoriteCharacters?.length && !showFavoritePage || showFavoritePage}
+                    type="button" 
+                    onClick={() => {
+                        setSearchFilter("")
+                        setShowFavoritePage(true)
+                    }}
+                >
+                    <h1>Favorites</h1>
+                    <FaArrowRight size={20} className="arrow-icon" />
+                </button>
+            </div>
+            
             {
+                showFavoritePage ? 
+                    favoriteCharacters?.length ? (
+                        <div className="cards-wrapper">
+                            {
+                                favoriteCharacters?.map((favoriteCharacters, idx) => (
+                                    <CharacterCard
+                                        key={favoriteCharacters.name + idx}
+                                        character={favoriteCharacters} 
+                                        handleOpenModal={handleOpenModal} 
+                                    />
+                                ))
+                            }
+                        </div>
+                    ) : (
+                        <h1 className="block mx-auto text-center text-white text-3xl py-36">
+                            Could not find characters!
+                        </h1>
+                    ) : 
                 loading ? (
                     <div className="cards-wrapper">
-                            <CardSkeletonLoad />
+                        <CardSkeletonLoad />
                     </div>
                 ) : !loading && characters.length ? (
                     <div className="cards-wrapper">
@@ -47,31 +105,29 @@ export function CardsList() {
                         }
                     </div>
                 ) : !loading && !characters.length ? (
-                    <h1 className="block mx-auto text-center text-white text-3xl py-48">
-                        Could not find characters that match this filter!
+                    <h1 className="block mx-auto text-center text-white text-3xl py-36">
+                        Could not find characters!
                     </h1>
                 ) : ""
             }            
-            {
-                !selectedFilters.includes("Favorites") ?
-                    <div className="flex justify-center">
-                        <Pagination
-                            sx={{
-                                "& button.MuiButtonBase-root, div.MuiPaginationItem-root": {
-                                    color: "white !important",
-                                    border: "1px solid #133962",
-                                    fontSize: "1rem"
-                                }
-                            }}
-                            color="primary"
-                            variant="outlined"
-                            page={page}
-                            count={pagesAmount}
-                            onChange={handleChangePage}
-                        />
-                    </div> 
-                    : <></>
-            }
+            <div className="flex justify-center">
+                {
+                    !showFavoritePage ? characters.length ? <Pagination
+                        sx={{
+                            "& button.MuiButtonBase-root, div.MuiPaginationItem-root": {
+                                color: "white !important",
+                                border: "1px solid #133962",
+                                fontSize: "1rem"
+                            }
+                        }}
+                        color="primary"
+                        variant="outlined"
+                        page={page}
+                        count={pagesAmount}
+                        onChange={handleChangePage}
+                    /> : <></> : <></>
+                }
+            </div> 
 
             <CharacterInfoModal 
                 isModalOpen={isModalOpen}

@@ -8,7 +8,7 @@ export function Filters() {
 
     return (
         <div className="categories-wrapper">
-            <h1>Categories:</h1>
+            <h1>Filters:</h1>
             {
                 loading ? (
                     <div className="grid grid-cols-3 gap-4">
