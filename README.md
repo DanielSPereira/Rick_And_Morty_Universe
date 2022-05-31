@@ -10,31 +10,29 @@ Aonde é possível ver informações detalhadas de cada personagem e adicioná-l
 
 ## Rodando localmente
 
-Clone o projeto
-
+Clone o projeto:
 ``
   git clone https://github.com/DanielSPereira/Rick_And_Morty_Universe.git
-``
-Instale as dependências
+``.
+Instale as dependências:
 
 > yarn
   
 Inicie o servidor
-``
-  yarn dev
-``
+
+> yarn dev
+
 
 ## Testando aplicação
 
 Após ter configurado o projeto e instalado as dependências na sua máquina, rode o comando:
-``
-yarn test
-``
+
+> yarn test
+
 para vizualizar os testes, ou
 
-``
-yarn watch
-``
+> yarn watch
+
 para vizualizar testes em tempo de desenvolvimento.
 
 ## Tecnologias utilizadas
