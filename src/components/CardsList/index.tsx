@@ -26,8 +26,6 @@ export function CardsList() {
         setShowFavoritePage
     } = useCharacters();
 
-    console.log(favoriteCharacters)
-
     const handleCloseModal = useCallback(() => {
         setIsModalOpen(false);
     }, []);
