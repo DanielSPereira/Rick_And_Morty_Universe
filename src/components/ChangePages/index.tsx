@@ -2,6 +2,7 @@ import { memo } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
 import { ICharacter } from "../../context/CharactersContext";
+import { useSearch } from "../../hooks/useSearch";
 
 import "./styles.css";
 
@@ -18,6 +19,8 @@ function ChangePageComponent({
     setShowFavoritePage,
     favoriteCharacters,
     }: IChangePageComponentProps) {
+    const { selectFilter } = useSearch()
+
     return (
         <div className="flex justify-between mb-6">
                 <button 
@@ -31,6 +34,7 @@ function ChangePageComponent({
                     onClick={() => {
                         setSearchFilter("")
                         setShowFavoritePage(false)
+                        selectFilter("All")
                     }}
                 >
                     <FaArrowLeft size={20} className="arrow-icon" />
@@ -47,6 +51,7 @@ function ChangePageComponent({
                     onClick={() => {
                         setSearchFilter("")
                         setShowFavoritePage(true)
+                        selectFilter("All")
                     }}
                 >
                     <h1>Favorites</h1>

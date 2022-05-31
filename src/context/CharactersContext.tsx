@@ -93,11 +93,7 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         setSelectedFilters(["All"]);
 
         return filters;
-    }, [data, showFavoritePage])
-    
-    const favoriteListIds = useMemo(() => {
-        return favoriteCharacters.map((favoriteCharacter => favoriteCharacter.id));
-    }, [favoriteCharacters])
+    }, [data])
 
     const filteredCharacters = useMemo(() => {
         if (!data) return [];
@@ -154,6 +150,10 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         return filteredCharactersBasedOnCharactersSpecies;
     }, [favoriteCharacters, selectedFilters, showFavoritePage, createFavoriteCharactersPagination, favoritePage])
 
+    const favoriteListIds = useMemo(() => {
+        return filteredFavoriteCharacters.map((favoriteCharacter => favoriteCharacter.id));
+    }, [filteredFavoriteCharacters])
+
     const getFavoriteCharactersFilters = useMemo((): string[] => {
         if (!filteredFavoriteCharacters.length) return ["All"];
     
@@ -167,7 +167,7 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         setSelectedFilters(["All"]);
 
         return ["All", ...filters];
-    }, [showFavoritePage, favoritePage, filteredFavoriteCharacters])
+    }, [showFavoritePage, favoritePage])
 
     const getPagesAmount = useCallback((data: { characters: { info: { pages: number }} }) => {
         if (!data) return;
@@ -204,23 +204,18 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
     }, [])
 
     const selectFilter = useCallback((filter: string) => {
-        console.log(filter)
-        console.log('1')
+        
         if (filter == "All")
             return setSelectedFilters([filter])
             
-        console.log('2')
         if (selectedFilters.includes("All"))
             return setSelectedFilters([filter])
         
-            console.log('3')
         if (selectedFilters.includes(filter) && selectedFilters.length > 1)
             return setSelectedFilters(selectedFilters.filter(selectedFilter => selectedFilter != filter))
         
-            console.log('4')
         if (selectedFilters.includes(filter) && selectedFilters.length == 1) return
         
-            console.log('5')
         setSelectedFilters([...selectedFilters, filter]);
     }, [selectedFilters])
 
