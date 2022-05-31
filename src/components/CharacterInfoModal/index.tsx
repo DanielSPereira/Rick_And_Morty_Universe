@@ -11,11 +11,9 @@ interface ICharacterInfoModalProps {
 }
 
 export function CharacterInfoModal({ isModalOpen, handleCloseModal }: ICharacterInfoModalProps) {
-    const { selectedCharacter, favoriteCharacter, favoriteCharacters } = useCharacters();
+    const { selectedCharacter, favoriteCharacter, favoriteCharactersIdsList } = useCharacters();
 
-    const isFavorite = useMemo(() => {
-        return !!favoriteCharacters?.find((fc) => fc.id == selectedCharacter?.id);
-    }, [favoriteCharacters, selectedCharacter])
+    const isFavorite = favoriteCharactersIdsList?.includes(selectedCharacter?.id!);
 
     function getFormattedDate(date: string) {
         let newDate = new Date(date);

@@ -1,5 +1,6 @@
-import { gql, useLazyQuery } from "@apollo/client";
+import { useLazyQuery } from "@apollo/client";
 import { useEffect, useState, createContext, useMemo, useCallback } from "react";
+import { GET_CHARACTERS } from "../graphql/GET_CHARACTERS";
 
 export interface IEpisode {
     id: string;
@@ -30,12 +31,16 @@ interface ICharactersContext {
     searchForCharacter: (name: string) => void;
     setSearchFilter: React.Dispatch<React.SetStateAction<string>>
     handleChangePage: (event: React.ChangeEvent<unknown>, page: number) => void;
-    favoriteCharacters: ICharacter[] | null;
+    handleChangeFavoritePage: (event: React.ChangeEvent<unknown>, page: number) => void;
+    favoriteCharacters: ICharacter[];
     selectedCharacter: ICharacter | null;
+    favoritePagesAmount: number;
+    favoritePage: number;
     selectedFilters: string[];
     showFavoritePage: boolean;
     characters: ICharacter[]; 
     searchFilter: string;
+    favoriteCharactersIdsList: string[];
     pagesAmount: number;
     filters: string[];
     loading: boolean;
@@ -44,40 +49,16 @@ interface ICharactersContext {
 
 export const CharactersContext = createContext<ICharactersContext>({} as ICharactersContext);
 
-export const GET_CHARACTERS = gql`
-    query FeedSearchQuery($FilterCharacter: String, $page: Int) { 
-        characters(page: $page, filter: { name: $FilterCharacter }) {
-            info {
-                pages
-            },
-            results {
-                id,
-                name
-                image,
-                status,
-                species,
-                created,
-                episode {
-                    id,
-                    name,
-                },
-                location {
-                    id,
-                    name,
-                }
-            }
-        }
-    }
-`;
-
 export const CharactersProvider = ({ children }: { children: React.ReactNode }) => {
     const [selectedCharacter, setSelectedCharacter] = useState<ICharacter | null>(null);
     const [favoriteCharacters, setFavoriteCharacters] = useState<ICharacter[]>([]);
     const [showFavoritePage, setShowFavoritePage] = useState<boolean>(false);
     const [selectedFilters, setSelectedFilters] = useState<string[]>(["All"]);
-    const [pagesAmount, setPagesAmount] = useState<number>(1);
     const [searchFilter, setSearchFilter] = useState<string>("");
+    const [pagesAmount, setPagesAmount] = useState<number>(1);
     const [page, setPage] = useState<number>(1);
+    const [favoritePagesAmount, setFavoritePagesAmount] = useState<number>(1);
+    const [favoritePage, setFavoritePage] = useState<number>(1);
 
     const [executeSearch, { data, loading }] = useLazyQuery(
         GET_CHARACTERS
@@ -100,16 +81,16 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         
         const characters = data.characters.results;
 
-        let filters: string[] = [];
+        let filters: string[] = ["All"];
 
         characters.filter(
             (character: ICharacter) => 
                 !filters.includes(character.species) && filters.push(character.species)
         );
         
-        setSelectedFilters(["All"])
-    
-        return ["All", ...filters];
+        setSelectedFilters(["All"]);
+
+        return filters;
     }, [data])
     
     const filteredCharacters = useMemo(() => {
@@ -127,29 +108,32 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         return filteredCharactersBasedOnCharactersSpecies;
     }, [data, selectedFilters])
 
-    const getFavoriteCharactersFilters = useMemo((): string[] => {
-        if (!favoriteCharacters) return ["All"];
+    const createFavoriteCharactersPagination = useMemo(() => {
+        let idx = 0;
+        let pagination: ICharacter[][] = [[]];
 
-        let filters: string[] = [];
+        let favCharacters = favoriteCharacters;
+        
+        if(!!searchFilter) {
+            favCharacters = favCharacters.filter((f => f.name.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase()) ));
+        }
+        
+        for(let index = 0; index < favCharacters.length; index++) {
+            if ((index + 1) % 21 == 0) {
+                idx = idx + 1;
+                pagination[idx] = []
+            }
 
-        favoriteCharacters.filter(
-            (character: ICharacter) => 
-                !filters.includes(character.species) && filters.push(character.species)
-        );
+            pagination[idx].push(favCharacters[index]);
+        };
 
-        setSelectedFilters(["All"])
-    
-        return ["All", ...filters];
-    }, [favoriteCharacters, showFavoritePage])
+        return pagination;
+    }, [favoriteCharacters, searchFilter])
 
     const filteredFavoriteCharacters = useMemo(() => {
         if (!data) return [];
  
-        let favCharacters = favoriteCharacters;
-
-        if (showFavoritePage && !!searchFilter) {
-            favCharacters = favoriteCharacters.filter((f => f.name.toLocaleLowerCase().includes(searchFilter.toLocaleLowerCase()) ));
-        }
+        let favCharacters = createFavoriteCharactersPagination[favoritePage - 1];
 
         const onlyAllFilterIsSelected = selectedFilters.includes("All");
 
@@ -162,13 +146,39 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         );
 
         return filteredCharactersBasedOnCharactersSpecies;
-    }, [favoriteCharacters, selectedFilters, searchFilter, showFavoritePage])
+    }, [favoriteCharacters, selectedFilters, showFavoritePage, createFavoriteCharactersPagination, favoritePage])
+
+    const getFavoriteCharactersFilters = useMemo((): string[] => {
+        if (!filteredFavoriteCharacters.length) return ["All"];
+
+        let filters: string[] = [];
+
+        filteredFavoriteCharacters.filter(
+            (character: ICharacter) => 
+                !filters.includes(character.species) && filters.push(character.species)
+        );
+        
+
+        setSelectedFilters(["All"]);
+
+        return ["All", ...filters];
+    }, [showFavoritePage, favoritePage])
+
+    const favoriteCharactersIdsList = useMemo(() => {
+        return favoriteCharacters.map((favoriteCharacter) => favoriteCharacter.id)
+    }, [favoriteCharacters])
 
     const getPagesAmount = useMemo(() => {
         if (!data) return pagesAmount;
 
         setPagesAmount(data.characters.info.pages)
     }, [data])
+    
+    const getFavoritePagesAmount = useMemo(() => {
+        if (!createFavoriteCharactersPagination.length) return favoritePagesAmount;
+
+        setFavoritePagesAmount(createFavoriteCharactersPagination.length)
+    }, [createFavoriteCharactersPagination])
 
     function selectCharacter(id: string) {
         const newSelectedCharacter = filteredCharacters?.find((character: ICharacter) => character.id === id);
@@ -182,6 +192,12 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         executeSearch({
             variables: { FilterCharacter: searchFilter, page: page }
         })
+    }
+
+    function handleChangeFavoritePage(event: React.ChangeEvent<unknown>, page: number) {
+        setFavoritePage(page);
+
+        setSelectedFilters(["All"]);
     }
 
     function selectFilter(filter: string) {
@@ -200,7 +216,7 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
     }
 
     function favoriteCharacter(id: string) {
-        const alreadyFavorite = !!favoriteCharacters.find(fc => fc.id == id);
+        const alreadyFavorite = !!favoriteCharacters.find((fc) => fc.id == id);
 
         if (alreadyFavorite) 
             return setFavoriteCharacters(state => state.filter(fc => fc.id != id));
@@ -211,7 +227,7 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
     }
 
     useEffect(() => {
-        if (!data && !loading) {
+        if (!data) {
             executeSearch({
                 variables: { FilterCharacter: searchFilter, page: page }
             })
@@ -228,11 +244,15 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
                 selectedCharacter,
                 selectedFilters,
                 searchFilter,
+                favoritePagesAmount,
+                favoritePage,
                 loading, 
+                favoriteCharactersIdsList,
                 page,
                 showFavoritePage,
                 searchForCharacter,
                 favoriteCharacter,
+                handleChangeFavoritePage,
                 setSearchFilter,
                 handleChangePage,
                 selectCharacter,

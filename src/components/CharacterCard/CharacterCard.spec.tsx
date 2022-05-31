@@ -1,25 +1,25 @@
 import { render } from "@testing-library/react";
+
 import { CharacterCard } from ".";
 
 
 const handleOpenModal = jest.fn();
 
 describe("CharacterCard Component", () => {
-    const character = {
-        id: "1",
-        name: "Rick",
-        status: "Alive",
-        species: "Human",
-        image: "imagem",
-        created: "january 2, 2015",
-        episode: [{ id: "1", name: "first ep" }],
-        location: {
-            id: "1",
-            name: "first location"
-        }
-    }
-    
     it("should render character information passed by props", () => {
+        const character = {
+            id: "1",
+            name: "Rick",
+            status: "Alive",
+            species: "Human",
+            image: "imagem",
+            created: "january 2, 2015",
+            episode: [{ id: "1", name: "first ep" }],
+            location: {
+                id: "1",
+                name: "first location"
+            }
+        }
         const { getByTestId } = render(
             <CharacterCard 
                 character={character} 

@@ -10,11 +10,9 @@ interface ICharacterCardProps {
 }
 
 function CharacterCardComponent({ character, handleOpenModal }: ICharacterCardProps) {
-    const { selectCharacter, favoriteCharacter, favoriteCharacters } = useCharacters();
+    const { selectCharacter, favoriteCharacter, favoriteCharactersIdsList } = useCharacters();
 
-    const isFavorite = useMemo(() => {
-        return !!favoriteCharacters?.find((fc) => fc.id == character.id);
-    }, [favoriteCharacters])
+    const isFavorite = favoriteCharactersIdsList?.includes(character.id);
 
     return (
         <div className="card box-shadow">
@@ -25,7 +23,7 @@ function CharacterCardComponent({ character, handleOpenModal }: ICharacterCardPr
                     <span className="flex items-center justify-between">
                         <h1 data-testid="character-name" className="character-name">{ character.name }</h1>
 
-                        <button onClick={() => favoriteCharacter(character.id)} type="button" className="star-btn">
+                        <button data-testid="favorite-button" onClick={() => favoriteCharacter(character.id)} type="button" className="star-btn">
                             <FaStar size={22} color={isFavorite ? "yellow" : "white"} />
                         </button>
                     </span>

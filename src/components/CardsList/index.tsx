@@ -18,10 +18,14 @@ export function CardsList() {
         pagesAmount, 
         showFavoritePage,
         favoriteCharacters,
+        favoritePage,
+        favoritePagesAmount,
         handleChangePage,
         setSearchFilter,
+        handleChangeFavoritePage,
         setShowFavoritePage
     } = useCharacters();
+
     console.log(favoriteCharacters)
 
     const handleCloseModal = useCallback(() => {
@@ -125,7 +129,20 @@ export function CardsList() {
                         page={page}
                         count={pagesAmount}
                         onChange={handleChangePage}
-                    /> : <></> : <></>
+                    /> : <></> : favoriteCharacters?.length ? <Pagination
+                        sx={{
+                            "& button.MuiButtonBase-root, div.MuiPaginationItem-root": {
+                                color: "white !important",
+                                border: "1px solid #133962",
+                                fontSize: "1rem"
+                            }
+                        }}
+                        color="primary"
+                        variant="outlined"
+                        page={favoritePage}
+                        count={favoritePagesAmount}
+                        onChange={handleChangeFavoritePage}
+                    /> : <></>
                 }
             </div> 
 
