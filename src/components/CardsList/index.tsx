@@ -4,27 +4,25 @@ import { useCharacters } from "../../hooks/useCharacters";
 import { Pagination } from '@mui/material';
 import { CharacterInfoModal } from "../CharacterInfoModal";
 import { CardSkeletonLoad } from "../CharacterCard/CardSkeletonLoad";
+import { ChangePage } from "../ChangePages";
 
 import "./styles.css"
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-
+import { useNavigation } from "../../hooks/useNavigation";
 
 export function CardsList() {    
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { characters, favoriteCharacters, loading } = useCharacters();
     const { 
-        characters, 
-        loading, 
-        page, 
+        page,
         pagesAmount, 
         showFavoritePage,
-        favoriteCharacters,
         favoritePage,
         favoritePagesAmount,
-        handleChangePage,
         setSearchFilter,
         handleChangeFavoritePage,
-        setShowFavoritePage
-    } = useCharacters();
+        handleChangePage,
+        setShowFavoritePage 
+    } = useNavigation();
 
     const handleCloseModal = useCallback(() => {
         setIsModalOpen(false);
@@ -35,41 +33,13 @@ export function CardsList() {
     }, []);
 
     return (
-        <div className="container-content pb-12 mt-20 md:mt-16">
-            <div className="flex justify-between mb-6">
-                <button 
-                    className={
-                        !showFavoritePage ? 
-                            "explore-button disabled" :
-                            "explore-button enable" 
-                    } 
-                    disabled={!showFavoritePage}
-                    type="button" 
-                    onClick={() => {
-                        setSearchFilter("")
-                        setShowFavoritePage(false)
-                    }}
-                >
-                    <FaArrowLeft size={20} className="arrow-icon" />
-                    <h1>Explore</h1>
-                </button>
-                <button 
-                    className={
-                        !favoriteCharacters?.length && !showFavoritePage || showFavoritePage ? 
-                            "favorite-button disabled" :
-                            "favorite-button enable" 
-                    } 
-                    disabled={!favoriteCharacters?.length && !showFavoritePage || showFavoritePage}
-                    type="button" 
-                    onClick={() => {
-                        setSearchFilter("")
-                        setShowFavoritePage(true)
-                    }}
-                >
-                    <h1>Favorites</h1>
-                    <FaArrowRight size={20} className="arrow-icon" />
-                </button>
-            </div>
+        <div className="content container-content pb-12 mt-20 md:mt-16">
+            <ChangePage 
+                showFavoritePage={showFavoritePage}
+                setSearchFilter={setSearchFilter} 
+                setShowFavoritePage={setShowFavoritePage}
+                favoriteCharacters={favoriteCharacters}
+            />
             
             {
                 showFavoritePage ? 

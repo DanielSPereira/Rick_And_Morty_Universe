@@ -1,0 +1,49 @@
+.favorite-button {
+    @apply duration-500 flex items-center;
+}
+
+.favorite-button.disabled {
+    filter: brightness(.7);
+}
+
+.favorite-button.enable {
+    filter: brightness(1.2);
+}
+
+.favorite-button.enable:hover {
+    filter: brightness(1.8);
+}
+
+.favorite-button .arrow-icon {
+    color: var(--light-blue);
+}
+
+.favorite-button h1 {
+    @apply text-lg mr-2 duration-500;
+    color: var(--text-body);
+}
+
+.explore-button {
+    @apply duration-500 flex items-center;
+}
+
+.explore-button.disabled {
+    filter: brightness(.7);
+}
+
+.explore-button.enable {
+    filter: brightness(1.2);
+}
+
+.explore-button.enable:hover {
+    filter: brightness(1.8);
+}
+
+.explore-button .arrow-icon {
+    color: var(--light-blue);
+}
+
+.explore-button h1 {
+    @apply text-lg ml-2 duration-500;
+    color: var(--text-body);
+}

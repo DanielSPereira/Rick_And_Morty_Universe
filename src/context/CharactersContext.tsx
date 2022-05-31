@@ -1,5 +1,7 @@
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { createContext } from "use-context-selector";
 import { useLazyQuery } from "@apollo/client";
-import { useEffect, useState, createContext, useMemo, useCallback } from "react";
+
 import { GET_CHARACTERS } from "../graphql/GET_CHARACTERS";
 
 export interface IEpisode {
@@ -38,9 +40,9 @@ interface ICharactersContext {
     favoritePage: number;
     selectedFilters: string[];
     showFavoritePage: boolean;
+    favoriteListIds: string[];
     characters: ICharacter[]; 
     searchFilter: string;
-    favoriteCharactersIdsList: string[];
     pagesAmount: number;
     filters: string[];
     loading: boolean;
@@ -52,13 +54,13 @@ export const CharactersContext = createContext<ICharactersContext>({} as ICharac
 export const CharactersProvider = ({ children }: { children: React.ReactNode }) => {
     const [selectedCharacter, setSelectedCharacter] = useState<ICharacter | null>(null);
     const [favoriteCharacters, setFavoriteCharacters] = useState<ICharacter[]>([]);
-    const [showFavoritePage, setShowFavoritePage] = useState<boolean>(false);
+    const [favoritePagesAmount, setFavoritePagesAmount] = useState<number>(1);
     const [selectedFilters, setSelectedFilters] = useState<string[]>(["All"]);
+    const [showFavoritePage, setShowFavoritePage] = useState<boolean>(false);
     const [searchFilter, setSearchFilter] = useState<string>("");
+    const [favoritePage, setFavoritePage] = useState<number>(1);
     const [pagesAmount, setPagesAmount] = useState<number>(1);
     const [page, setPage] = useState<number>(1);
-    const [favoritePagesAmount, setFavoritePagesAmount] = useState<number>(1);
-    const [favoritePage, setFavoritePage] = useState<number>(1);
 
     const [executeSearch, { data, loading }] = useLazyQuery(
         GET_CHARACTERS
@@ -91,8 +93,12 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         setSelectedFilters(["All"]);
 
         return filters;
-    }, [data])
+    }, [data, showFavoritePage])
     
+    const favoriteListIds = useMemo(() => {
+        return favoriteCharacters.map((favoriteCharacter => favoriteCharacter.id));
+    }, [favoriteCharacters])
+
     const filteredCharacters = useMemo(() => {
         if (!data) return [];
 
@@ -150,7 +156,7 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
 
     const getFavoriteCharactersFilters = useMemo((): string[] => {
         if (!filteredFavoriteCharacters.length) return ["All"];
-
+    
         let filters: string[] = [];
 
         filteredFavoriteCharacters.filter(
@@ -158,64 +164,67 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
                 !filters.includes(character.species) && filters.push(character.species)
         );
         
-
         setSelectedFilters(["All"]);
 
         return ["All", ...filters];
-    }, [showFavoritePage, favoritePage])
+    }, [showFavoritePage, favoritePage, filteredFavoriteCharacters])
 
-    const favoriteCharactersIdsList = useMemo(() => {
-        return favoriteCharacters.map((favoriteCharacter) => favoriteCharacter.id)
-    }, [favoriteCharacters])
-
-    const getPagesAmount = useMemo(() => {
-        if (!data) return pagesAmount;
+    const getPagesAmount = useCallback((data: { characters: { info: { pages: number }} }) => {
+        if (!data) return;
 
         setPagesAmount(data.characters.info.pages)
-    }, [data])
+    }, [])
     
-    const getFavoritePagesAmount = useMemo(() => {
-        if (!createFavoriteCharactersPagination.length) return favoritePagesAmount;
+    const getFavoritePagesAmount = useCallback((createFavoriteCharactersPagination: ICharacter[][]) => {
+        if (!createFavoriteCharactersPagination.length) return;
 
         setFavoritePagesAmount(createFavoriteCharactersPagination.length)
-    }, [createFavoriteCharactersPagination])
+    }, [])
 
-    function selectCharacter(id: string) {
+    const selectCharacter = useCallback((id: string) => {
         const newSelectedCharacter = filteredCharacters?.find((character: ICharacter) => character.id === id);
 
         setSelectedCharacter(newSelectedCharacter);
-    }
+    }, [filteredCharacters])
 
-    function handleChangePage(event: React.ChangeEvent<unknown>, page: number) {
+    const handleChangePage = useCallback((event: React.ChangeEvent<unknown>, page: number) => {
         setPage(page);
 
         executeSearch({
             variables: { FilterCharacter: searchFilter, page: page }
         })
-    }
 
-    function handleChangeFavoritePage(event: React.ChangeEvent<unknown>, page: number) {
+        window.scrollTo(0, 350)
+    }, [searchFilter])
+
+    const handleChangeFavoritePage = useCallback((event: React.ChangeEvent<unknown>, page: number) => {
         setFavoritePage(page);
 
         setSelectedFilters(["All"]);
-    }
+    }, [])
 
-    function selectFilter(filter: string) {
-        setSelectedFilters((state) => {
-            if (filter == "All") return [filter];
-
-            if (state.includes("All")) return [filter];
-
-            if (state.includes(filter) && state.length > 1) 
-                return selectedFilters.filter(selectedFilter => selectedFilter != filter);
-
-            if (state.includes(filter) && state.length == 1) return state;
+    const selectFilter = useCallback((filter: string) => {
+        console.log(filter)
+        console.log('1')
+        if (filter == "All")
+            return setSelectedFilters([filter])
             
-            return [...selectedFilters, filter];
-        });
-    }
+        console.log('2')
+        if (selectedFilters.includes("All"))
+            return setSelectedFilters([filter])
+        
+            console.log('3')
+        if (selectedFilters.includes(filter) && selectedFilters.length > 1)
+            return setSelectedFilters(selectedFilters.filter(selectedFilter => selectedFilter != filter))
+        
+            console.log('4')
+        if (selectedFilters.includes(filter) && selectedFilters.length == 1) return
+        
+            console.log('5')
+        setSelectedFilters([...selectedFilters, filter]);
+    }, [selectedFilters])
 
-    function favoriteCharacter(id: string) {
+    const favoriteCharacter = useCallback((id: string) => {
         const alreadyFavorite = !!favoriteCharacters.find((fc) => fc.id == id);
 
         if (alreadyFavorite) 
@@ -224,7 +233,7 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         const newFavoriteCharacter = filteredCharacters.find((character: ICharacter) => character.id == id);
 
         newFavoriteCharacter && setFavoriteCharacters([...favoriteCharacters, newFavoriteCharacter]);
-    }
+    }, [filteredCharacters, favoriteCharacters])
 
     useEffect(() => {
         if (!data) {
@@ -232,32 +241,40 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
                 variables: { FilterCharacter: searchFilter, page: page }
             })
         } 
+
+        getPagesAmount(data);
     }, [data])
+
+    useEffect(() => {
+        console.log(selectedFilters)
+    }, [selectedFilters])
+    
+    useEffect(() => getFavoritePagesAmount(createFavoriteCharactersPagination), [createFavoriteCharactersPagination])
 
     return (
         <CharactersContext.Provider 
             value={{ 
+                filters: showFavoritePage ? getFavoriteCharactersFilters : getFilters,
                 favoriteCharacters: filteredFavoriteCharacters,
                 characters: filteredCharacters,
                 pagesAmount: pagesAmount,
-                filters: showFavoritePage ? getFavoriteCharactersFilters : getFilters,
+                favoritePagesAmount,
                 selectedCharacter,
+                showFavoritePage,
                 selectedFilters,
                 searchFilter,
-                favoritePagesAmount,
                 favoritePage,
                 loading, 
-                favoriteCharactersIdsList,
                 page,
-                showFavoritePage,
+                handleChangeFavoritePage,
+                setShowFavoritePage,
                 searchForCharacter,
                 favoriteCharacter,
-                handleChangeFavoritePage,
                 setSearchFilter,
                 handleChangePage,
                 selectCharacter,
                 selectFilter,
-                setShowFavoritePage,
+                favoriteListIds
             }}
         >
             { children }

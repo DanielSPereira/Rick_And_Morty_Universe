@@ -3811,6 +3811,11 @@ universalify@^0.1.2:
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
 
+use-context-selector@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/use-context-selector/-/use-context-selector-1.4.0.tgz#fd46afe322e4f7e2d8fba91d806af075d646ef85"
+  integrity sha512-1vaCjBq/ryq9y79qwh1tkqrUNLYlSLXNHClUkpgBWPvnUV5jqAJvRSsK77mG80uBwNF9HF/kuRyPtXEQhlJ4Jw==
+
 util-deprecate@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"

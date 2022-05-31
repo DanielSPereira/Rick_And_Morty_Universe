@@ -1,10 +1,10 @@
-import { useCharacters } from "../../hooks/useCharacters";
+import { useSearch } from "../../hooks/useSearch";
 import { FilterSkeletonLoad } from "./FilterSkeletonLoad";
 
 import "./styles.css"
 
 export function Filters() {
-    const { filters, selectedFilters, selectFilter, loading } = useCharacters();
+    const { filters, selectedFilters, selectFilter, loading } = useSearch();
 
     return (
         <div className="categories-wrapper">

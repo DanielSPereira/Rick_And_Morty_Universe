@@ -10,9 +10,9 @@ interface ICharacterCardProps {
 }
 
 function CharacterCardComponent({ character, handleOpenModal }: ICharacterCardProps) {
-    const { selectCharacter, favoriteCharacter, favoriteCharactersIdsList } = useCharacters();
+    const { selectCharacter, favoriteCharacter, favoriteList } = useCharacters();
 
-    const isFavorite = favoriteCharactersIdsList?.includes(character.id);
+    const isFavorite = favoriteList?.includes(character?.id!);
 
     return (
         <div className="card box-shadow">

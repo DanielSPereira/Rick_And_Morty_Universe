@@ -1,10 +1,10 @@
 import { FaSearch } from "react-icons/fa";
-import { useCharacters } from "../../hooks/useCharacters";
+import { useSearch } from "../../hooks/useSearch";
 
 import "./styles.css"
 
 export function SearchBar() {
-    const { searchForCharacter } = useCharacters();
+    const { searchForCharacter } = useSearch();
 
     return (
         <label htmlFor="search" className="label-search box-shadow">
