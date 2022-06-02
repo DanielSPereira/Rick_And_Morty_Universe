@@ -1,6 +1,7 @@
 import { createFavoritesPagePagination } from "../helpers/createFavoritesPagePagination";
+import { createFilters } from "../helpers/createFIlters";
 import { createFiltersCombination } from "../helpers/createFiltersCombination";
-import { filterCharacters } from "../helpers/FilterCharacters";
+import { filterCharacters } from "../helpers/filterCharacters";
 
 export interface IEpisode {
     id: string;
@@ -44,10 +45,10 @@ export function charactersReducer(state: ICharactersState, action: { type: strin
 
     switch (type) {
         case "SET_CHARACTERS": 
-            const getFiltersFromCharaters = payload.results.map((character: ICharacter) => character.species);
+            const getFiltersFromCharaters = createFilters(payload.results);
             const explorePagesAmount = payload.info.pages;
 
-            const filteredCharacters = filterCharacters(state.selectedFilters, payload);
+            const filteredCharacters = filterCharacters(state.selectedFilters, payload.results);
 
             return { ...state, characters: filteredCharacters, filters: getFiltersFromCharaters, explorePagesAmount };
 
@@ -79,7 +80,8 @@ export function charactersReducer(state: ICharactersState, action: { type: strin
             const newSelectedFilters = createFiltersCombination(state.selectedFilters, payload);
             if (newSelectedFilters == "SAME") state;
 
-            return { ...state, selectedFilters: [...state.selectedFilters, payload] };
+            const characters = state.characters.filter(character => newSelectedFilters.includes(character.species));
+            return { ...state, characters, selectedFilters: [...state.selectedFilters, payload] };
 
         case "SET_SEARCH_BY_NAME":
             return { ...state, selectedFilters: payload };
