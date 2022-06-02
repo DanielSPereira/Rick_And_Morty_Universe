@@ -3,13 +3,13 @@ import { useCharacters } from "../../../hooks/useCharacters";
 import { CharacterCard } from "../../CharacterCard";
 
 export function FavoritesList({ handleOpenModal }: { handleOpenModal: () => void}) {
-    const { favoriteCharacters } = useCharacters();
+    const { favoritesPagePagination } = useCharacters();
 
     return (
-        favoriteCharacters?.length ? (
+        favoritesPagePagination?.length ? (
             <div className="cards-wrapper">
                 {
-                    favoriteCharacters?.map((favoriteCharacters: ICharacter, idx: number) => (
+                    favoritesPagePagination?.map((favoriteCharacters: ICharacter, idx: number) => (
                         <CharacterCard
                             key={favoriteCharacters.name + idx}
                             character={favoriteCharacters} 

@@ -25,10 +25,12 @@ export interface ICharacter {
 }
 
 export interface ICharactersState {
+    loading: boolean;
     characters: ICharacter[];
+    filteredCharacters: ICharacter[];
     selectedCharacter: ICharacter;
     favoriteCharacters: ICharacter[];
-    favoritesPagePagination: ICharacter[][];
+    favoritesPagePagination: ICharacter[];
     exploreCurrentPage: number;
     explorePagesAmount: number;
     favoritesCurrentPage: number;
@@ -44,47 +46,76 @@ export function charactersReducer(state: ICharactersState, action: { type: strin
     const { type, payload } = action;
 
     switch (type) {
+        case "SET_LOADING":
+            return { ...state, loading: payload }
+
         case "SET_CHARACTERS": 
             const getFiltersFromCharaters = createFilters(payload.results);
             const explorePagesAmount = payload.info.pages;
-
             const filteredCharacters = filterCharacters(state.selectedFilters, payload.results);
+            const characters = payload.results;
+            const filters = getFiltersFromCharaters;
+            const loading = false;
 
-            return { ...state, characters: filteredCharacters, filters: getFiltersFromCharaters, explorePagesAmount };
+            return { ...state, loading, characters, filteredCharacters, filters, explorePagesAmount };
 
         case "SELECT_CHARACTER":
             return { ...state, selectedCharacter: payload }
         
-        case "ADD_FAVORITE_CHARACTER":
-            const favoriteListIds = state.favoriteCharacters.map((favorite) => favorite.id);
-            favoriteListIds.push(payload.id);
-
-            if (state.favoriteCharacters.length < 20) {
-                return { ...state, favoriteCharacters: [...state.favoriteCharacters, payload], favoriteListIds };
+        case "ADD_FAVORITE_CHARACTER": {
+            const alreadyOnFavorites = !!state.favoriteCharacters.find(fc => fc.id == payload.id);
+            
+            if (!alreadyOnFavorites) {
+                const favoriteCharacters = [...state.favoriteCharacters, payload];
+                const favoriteListIds = favoriteCharacters.map((favorite) => favorite.id);
+                const favoritesPagePagination = createFavoritesPagePagination(favoriteCharacters);
+                
+                console.log(favoritesPagePagination)
+                
+                return { 
+                    ...state,
+                    favoritesPagePagination: favoritesPagePagination[state.favoritesCurrentPage - 1], 
+                    favoritesPagesAmount: favoritesPagePagination?.length, 
+                    favoriteCharacters, 
+                    favoriteListIds
+                };
             }
-
-            const favoritesPagePagination = createFavoritesPagePagination(state.favoriteCharacters);
-
-            return { ...state, favoriteCharacters: [...state.favoriteCharacters, payload], favoritesPagePagination, favoriteListIds };
+            
+            const favoriteCharacters = state.favoriteCharacters.filter((character) => character.id != payload.id);
+            const favoriteListIds = favoriteCharacters.map((favorite) => favorite.id);
+            const favoritesPagePagination = createFavoritesPagePagination(favoriteCharacters)[state.favoritesCurrentPage - 1];
+            const favoritesPagesAmount = favoritesPagePagination.length;
+            
+            return { ...state, favoritesPagesAmount, favoriteCharacters, favoritesPagePagination, favoriteListIds };
+        }
 
         case "CHANGE_EXPLORE_PAGE":
-            return { ...state, exploreCurrentPage: payload };
+            return { ...state, loading: true, filteredCharacters: [], exploreCurrentPage: payload, selectedFilters: ["All"]};
 
-        case "CHANGE_FAVORITES_PAGE":
-            return { ...state, favoritesCurrentPage: payload };
+        case "CHANGE_FAVORITES_PAGE": {
+            const favoritesPagePagination = createFavoritesPagePagination(state.favoriteCharacters)[payload - 1];
 
-        case "SHOW_FAVORITES_PAGE":
-            return { ...state, showFavoritesPage: payload };
+            return { ...state, favoritesCurrentPage: payload, favoritesPagePagination };
+        }
+
+        case "SHOW_FAVORITES_PAGE": {
+            console.log(state.favoritesPagePagination)
+            return { ...state, showFavoritesPage: payload, loading: false };
+        }
         
         case "SELECT_FILTER":
             const newSelectedFilters = createFiltersCombination(state.selectedFilters, payload);
-            if (newSelectedFilters == "SAME") state;
+            
+            if (newSelectedFilters == "SAME") return state;
+            
+            if (newSelectedFilters.includes("All")) return {...state, filteredCharacters: state.characters, selectedFilters: ["All"]};
+            
+            const newFilteredCharacters = state.characters.filter(character => newSelectedFilters.includes(character.species));
 
-            const characters = state.characters.filter(character => newSelectedFilters.includes(character.species));
-            return { ...state, characters, selectedFilters: [...state.selectedFilters, payload] };
+            return { ...state, filteredCharacters: newFilteredCharacters, selectedFilters: newSelectedFilters };
 
         case "SET_SEARCH_BY_NAME":
-            return { ...state, selectedFilters: payload };
+            return { ...state, loading: true, searchByName: payload, exploreCurrentPage: 1 };
 
         default:
             return state;
@@ -92,10 +123,27 @@ export function charactersReducer(state: ICharactersState, action: { type: strin
 }
 
 export const charactersInitialState: ICharactersState = {
+    loading: true,
     characters: [],
-    selectedCharacter: {} as ICharacter,
+    filteredCharacters: [],
+    selectedCharacter: {
+        id: '',
+        name: '',
+        image: '',
+        status: '',
+        species: '',
+        created: '',
+        episode: [{
+            id: '',
+            name: '',
+        }],
+        location: {
+            id: '',
+            name: '',
+        }
+    },
     favoriteCharacters: [],
-    favoritesPagePagination: [[]],
+    favoritesPagePagination: [],
     exploreCurrentPage: 1,
     explorePagesAmount: 1,
     favoritesCurrentPage: 1,

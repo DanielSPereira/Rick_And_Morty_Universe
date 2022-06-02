@@ -6,7 +6,7 @@ import { FavoritesList } from "./FavoritesList";
 import { useSearch } from "../../hooks/useSearch";
 import { useCharacters } from "../../hooks/useCharacters";
 import { useNavigation } from "../../hooks/useNavigation";
-// import { CharacterInfoModal } from "../CharacterInfoModal";
+import { CharacterInfoModal } from "../CharacterInfoModal";
 import { ExplorePagination } from "./ExploreList/ExplorePagination";
 import { FavoritesPagination } from "./FavoritesList/FavoritesPagination";
 
@@ -16,7 +16,7 @@ export function CardsList() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     
     const { handleSearchByName } = useSearch();
-    const { characters, favoriteCharacters } = useCharacters();
+    const { characters, favoritesPagePagination } = useCharacters();
     const { showFavoritesPage, handleChangeShowFavoritesPage } = useNavigation();
 
     const handleCloseModal = useCallback(() => {
@@ -33,7 +33,7 @@ export function CardsList() {
                 showFavoritePage={showFavoritesPage}
                 handleChangeSearchByName={handleSearchByName} 
                 handleChangeShowFavoritesPage={handleChangeShowFavoritesPage}
-                favoriteCharacters={favoriteCharacters}
+                favoriteCharacters={favoritesPagePagination}
             />
             
             {
@@ -45,7 +45,7 @@ export function CardsList() {
             <div className="flex justify-center">
                 {
                     showFavoritesPage ? (
-                        favoriteCharacters?.length ? (
+                        favoritesPagePagination?.length ? (
                             <FavoritesPagination />
                         ) : <></>
                         
@@ -57,10 +57,10 @@ export function CardsList() {
                 }
             </div> 
 
-            {/* <CharacterInfoModal 
+            <CharacterInfoModal 
                 isModalOpen={isModalOpen}
                 handleCloseModal={handleCloseModal} 
-            /> */}
+            />
         </div>
     )
 }

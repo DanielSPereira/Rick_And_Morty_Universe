@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useReducer } from "react";
 import { createContext } from "use-context-selector";
-import { useLazyQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 
 import { GET_CHARACTERS } from "../graphql/GET_CHARACTERS";
 import { charactersInitialState, charactersReducer, ICharacter, ICharactersState } from "../reducers/CharactersReducer";
@@ -22,26 +22,25 @@ export const CharactersContext = createContext<ICharactersContext>({} as ICharac
 
 export const CharactersProvider = ({ children }: { children: React.ReactNode }) => {
     const [ value, dispatch ] = useReducer(charactersReducer, charactersInitialState);
-
     
-    const[ getCharacters, { data, loading } ] = useLazyQuery(GET_CHARACTERS);
+    const { data, loading } = useQuery(
+        GET_CHARACTERS,
+        {
+            variables: { CharacterName: value.searchByName, Page: value.exploreCurrentPage }
+        }
+    );
 
     const handleSearchByName = useCallback(
-        (nameToSearch: string) => {
-            dispatch({ type: "SET_SEARCH_BY_NAME", payload: nameToSearch })
-            
-            getCharacters({ variables: { CharacterName: nameToSearch, Page: 1 } }), []   
-        }, []    
+        (nameToSearch: string) => dispatch({ type: "SET_SEARCH_BY_NAME", payload: nameToSearch }), []    
     );
 
     const handleChangeExplorePage = useCallback(
-        (e: React.ChangeEvent<unknown>, page: number) => 
-            getCharacters({ variables: { CharacterName: value.searchByName, Page: page } }), []
+        (e: React.ChangeEvent<unknown>, page: number) => dispatch({ type: "CHANGE_EXPLORE_PAGE", payload: page }), []
     );
     
     const handleChangeFavoritesPage = useCallback(
         (e: React.ChangeEvent<unknown>, page: number) =>
-            dispatch({ type: "", payload: page }), []
+            dispatch({ type: "CHANGE_FAVORITES_PAGE", payload: page }), []
     );
 
     const handleChangeShowFavoritesPage = useCallback(
@@ -64,20 +63,12 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
             dispatch({ type: "ADD_FAVORITE_CHARACTER", payload: character }), []
     );
 
-    useEffect(() => {
-        if (!data) {
-            getCharacters();
-            return;
-        }
-
-        dispatch({ type: "SET_CHARACTERS", payload: data.characters })
-    }, [data]);
+    useEffect(() => data && dispatch({ type: "SET_CHARACTERS", payload: data.characters }), [data]);
     
     return (
         <CharactersContext.Provider 
             value={{ 
                 ...value,
-                loading,
                 handleChangeShowFavoritesPage,
                 handleAddFavoriteCharacter,
                 handleChangeFavoritesPage,
