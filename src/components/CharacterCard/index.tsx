@@ -1,4 +1,4 @@
-import { ICharacter } from "../../context/CharactersContext";
+import { ICharacter } from "../../reducers/CharactersReducer";
 import { useCharacters } from "../../hooks/useCharacters";
 import { FaStar } from "react-icons/fa";
 import { memo, useMemo } from "react";
@@ -10,7 +10,7 @@ interface ICharacterCardProps {
 }
 
 function CharacterCardComponent({ character, handleOpenModal }: ICharacterCardProps) {
-    const { selectCharacter, favoriteCharacter, favoriteList } = useCharacters();
+    const { handleSelectCharacter, handleAddFavoriteCharacter, favoriteList } = useCharacters();
 
     const isFavorite = favoriteList?.includes(character?.id!);
 
@@ -23,7 +23,7 @@ function CharacterCardComponent({ character, handleOpenModal }: ICharacterCardPr
                     <span className="flex items-center justify-between">
                         <h1 data-testid="character-name" className="character-name">{ character.name }</h1>
 
-                        <button data-testid="favorite-button" onClick={() => favoriteCharacter(character.id)} type="button" className="star-btn">
+                        <button data-testid="favorite-button" onClick={() => handleAddFavoriteCharacter(character)} type="button" className="star-btn">
                             <FaStar size={22} color={isFavorite ? "yellow" : "white"} />
                         </button>
                     </span>
@@ -52,7 +52,7 @@ function CharacterCardComponent({ character, handleOpenModal }: ICharacterCardPr
                     type="button" 
                     className="view-details" 
                     onClick={() => {
-                        selectCharacter(character.id);
+                        handleSelectCharacter(character);
                         handleOpenModal();
                     }}
                 >

@@ -1,25 +1,25 @@
 import { memo } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 
-import { ICharacter } from "../../context/CharactersContext";
+import { ICharacter } from "../../reducers/CharactersReducer";
 import { useSearch } from "../../hooks/useSearch";
 
 import "./styles.css";
 
 interface IChangePageComponentProps {
     showFavoritePage: boolean; 
-    setSearchFilter: React.Dispatch<React.SetStateAction<string>>;
-    setShowFavoritePage: React.Dispatch<React.SetStateAction<boolean>>; 
     favoriteCharacters: ICharacter[];
+    handleChangeSearchByName: (nameToSearch: string) => void;
+    handleChangeShowFavoritesPage: (isToShow: boolean) => void; 
 }
 
 function ChangePageComponent({ 
     showFavoritePage, 
-    setSearchFilter, 
-    setShowFavoritePage,
     favoriteCharacters,
+    handleChangeSearchByName, 
+    handleChangeShowFavoritesPage,
     }: IChangePageComponentProps) {
-    const { selectFilter } = useSearch()
+    const { handleSelectFilter } = useSearch()
 
     return (
         <div className="flex justify-between mb-6">
@@ -32,9 +32,9 @@ function ChangePageComponent({
                     disabled={!showFavoritePage}
                     type="button" 
                     onClick={() => {
-                        setSearchFilter("")
-                        setShowFavoritePage(false)
-                        selectFilter("All")
+                        handleChangeSearchByName("")
+                        handleChangeShowFavoritesPage(false)
+                        handleSelectFilter("All")
                     }}
                 >
                     <FaArrowLeft size={20} className="arrow-icon" />
@@ -49,9 +49,9 @@ function ChangePageComponent({
                     disabled={!favoriteCharacters?.length && !showFavoritePage || showFavoritePage}
                     type="button" 
                     onClick={() => {
-                        setSearchFilter("")
-                        setShowFavoritePage(true)
-                        selectFilter("All")
+                        handleChangeSearchByName("")
+                        handleChangeShowFavoritesPage(true)
+                        handleSelectFilter("All")
                     }}
                 >
                     <h1>Favorites</h1>

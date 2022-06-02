@@ -4,7 +4,7 @@ import { useSearch } from "../../hooks/useSearch";
 import "./styles.css"
 
 export function SearchBar() {
-    const { searchForCharacter } = useSearch();
+    const { handleSearchByName } = useSearch();
 
     return (
         <label htmlFor="search" className="label-search box-shadow">
@@ -12,7 +12,7 @@ export function SearchBar() {
             <input 
                 onKeyPress={(e) => {
                     if (e.key == "Enter") {
-                        searchForCharacter(e.currentTarget.value);
+                        handleSearchByName(e.currentTarget.value);
                     } 
                 }}  
                 placeholder="Search..." 

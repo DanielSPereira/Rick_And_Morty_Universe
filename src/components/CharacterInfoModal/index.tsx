@@ -11,7 +11,7 @@ interface ICharacterInfoModalProps {
 }
 
 export function CharacterInfoModal({ isModalOpen, handleCloseModal }: ICharacterInfoModalProps) {
-    const { selectedCharacter, favoriteCharacter, favoriteList } = useCharacters();
+    const { selectedCharacter, handleAddFavoriteCharacter, favoriteList } = useCharacters();
 
     const isFavorite = favoriteList?.includes(selectedCharacter?.id!);
 
@@ -32,7 +32,7 @@ export function CharacterInfoModal({ isModalOpen, handleCloseModal }: ICharacter
             contentLabel="modal"
         >
             <div className="back">
-                <button type="button" onClick={() => favoriteCharacter(selectedCharacter?.id!)}>
+                <button type="button" onClick={() => handleAddFavoriteCharacter(selectedCharacter!)}>
                     <FaStar size={22} color={!!isFavorite ? "yellow" : "white"} />
                 </button>
                 <button type="button" onClick={handleCloseModal}>

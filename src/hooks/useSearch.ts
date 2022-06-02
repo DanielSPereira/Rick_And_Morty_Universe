@@ -2,19 +2,23 @@ import { useContextSelector } from "use-context-selector";
 import { CharactersContext } from "../context/CharactersContext";
 
 export function useSearch() {
-    const selectedFilters = useContextSelector(CharactersContext, ctx => ctx.selectedFilters);
+    const searchByName = useContextSelector(CharactersContext, ctx => ctx.searchByName);
+    
     const loading = useContextSelector(CharactersContext, ctx => ctx.loading);
     const filters = useContextSelector(CharactersContext, ctx => ctx.filters);
-    const selectFilter = useContextSelector(CharactersContext, ctx => ctx.selectFilter);
-    const searchForCharacter = useContextSelector(CharactersContext, ctx => ctx.searchForCharacter);
+    const selectedFilters = useContextSelector(CharactersContext, ctx => ctx.selectedFilters);
+    const handleSelectFilter = useContextSelector(CharactersContext, ctx => ctx.handleSelectFilter);
+
+    const handleSearchByName = useContextSelector(CharactersContext, ctx => ctx.handleSearchByName);
     
 
     
     return {
+        selectedFilters,
+        searchByName,
         loading,
         filters,
-        selectedFilters,
-        selectFilter,
-        searchForCharacter
+        handleSelectFilter,
+        handleSearchByName,
     };
 } 

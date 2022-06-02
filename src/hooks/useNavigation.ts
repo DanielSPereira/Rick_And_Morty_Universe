@@ -2,25 +2,26 @@ import { useContextSelector } from "use-context-selector";
 import { CharactersContext } from "../context/CharactersContext";
 
 export function useNavigation() {
-    const page = useContextSelector(CharactersContext, ctx => ctx.page);
-    const pagesAmount = useContextSelector(CharactersContext, ctx => ctx.pagesAmount);
-    const favoritePage = useContextSelector(CharactersContext, ctx => ctx.favoritePage);
-    const showFavoritePage = useContextSelector(CharactersContext, ctx => ctx.showFavoritePage);
-    const favoritePagesAmount = useContextSelector(CharactersContext, ctx => ctx.favoritePagesAmount);
-    const setShowFavoritePage = useContextSelector(CharactersContext, ctx => ctx.setShowFavoritePage);
-    const setSearchFilter = useContextSelector(CharactersContext, ctx => ctx.setSearchFilter);
-    const handleChangePage = useContextSelector(CharactersContext, ctx => ctx.handleChangePage);
-    const handleChangeFavoritePage = useContextSelector(CharactersContext, ctx => ctx.handleChangeFavoritePage);
+    const exploreCurrentPage = useContextSelector(CharactersContext, ctx => ctx.exploreCurrentPage);
+    const explorePagesAmount = useContextSelector(CharactersContext, ctx => ctx.explorePagesAmount);
+
+    const favoritesCurrentPage = useContextSelector(CharactersContext, ctx => ctx.favoritesCurrentPage);
+    const favoritePagesAmount = useContextSelector(CharactersContext, ctx => ctx.favoritesPagesAmount);
+    const showFavoritesPage = useContextSelector(CharactersContext, ctx => ctx.showFavoritesPage);
+    
+    
+    const handleChangeExplorePage = useContextSelector(CharactersContext, ctx => ctx.handleChangeExplorePage);
+    const handleChangeFavoritesPage = useContextSelector(CharactersContext, ctx => ctx.handleChangeFavoritesPage);
+    const handleChangeShowFavoritesPage = useContextSelector(CharactersContext, ctx => ctx.handleChangeShowFavoritesPage);
     
     return {
-        page,
-        pagesAmount,
-        favoritePage,
-        showFavoritePage,    
+        favoritesCurrentPage,
         favoritePagesAmount,
-        handleChangeFavoritePage,
-        setShowFavoritePage,
-        handleChangePage,
-        setSearchFilter,
+        showFavoritesPage,
+        exploreCurrentPage,
+        explorePagesAmount,
+        handleChangeShowFavoritesPage,    
+        handleChangeFavoritesPage,
+        handleChangeExplorePage,
     };
 } 

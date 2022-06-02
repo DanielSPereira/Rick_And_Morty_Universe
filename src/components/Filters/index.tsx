@@ -4,7 +4,7 @@ import { FilterSkeletonLoad } from "./FilterSkeletonLoad";
 import "./styles.css"
 
 export function Filters() {
-    const { filters, selectedFilters, selectFilter, loading } = useSearch();
+    const { filters, selectedFilters, handleSelectFilter, loading } = useSearch();
 
     return (
         <div className="categories-wrapper">
@@ -20,7 +20,7 @@ export function Filters() {
                             filters.map((filter) =>
                                 <button
                                     data-testid={filter + '-filter'}
-                                    onClick={() => selectFilter(filter)}
+                                    onClick={() => handleSelectFilter(filter)}
                                     key={filter}
                                     type="button"
                                     className={
