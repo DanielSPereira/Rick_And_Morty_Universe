@@ -17,7 +17,7 @@ export function Filters() {
                 ) : (
                     <div className="pt-1">
                         {
-                            filters.map((filter) =>
+                            filters?.map((filter) =>
                                 <button
                                     data-testid={filter + '-filter'}
                                     onClick={() => handleSelectFilter(filter)}

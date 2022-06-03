@@ -1,9 +1,9 @@
 import { render } from "@testing-library/react";
 import { Filters } from ".";
 
-jest.mock("../../hooks/useCharacters", () => {
+jest.mock("../../hooks/useSearch", () => {
     return {
-        useCharacters: () => ({
+        useSearch: () => ({
             filters: ["All", "Human", "Alien"],
             selectedFilters: ["All"]
         })

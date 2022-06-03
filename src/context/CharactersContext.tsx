@@ -1,14 +1,11 @@
 import { useEffect, useCallback, useReducer } from "react";
-import { createContext } from "use-context-selector";
+import { createContext, useContext } from "use-context-selector";
 import { useQuery } from "@apollo/client";
 
-import { GET_CHARACTERS } from "../graphql/GET_CHARACTERS";
 import { charactersInitialState, charactersReducer, ICharacter, ICharactersState } from "../reducers/CharactersReducer";
+import { GET_CHARACTERS } from "../graphql/GET_CHARACTERS";
 
 interface ICharactersContext extends ICharactersState { 
-    loading: boolean;
-    searchByName: string;
-    showFavoritesPage: boolean;
     handleChangeExplorePage: (event: React.ChangeEvent<unknown>, page: number) => void;
     handleChangeFavoritesPage: (event: React.ChangeEvent<unknown>, page: number) => void;
     handleAddFavoriteCharacter: (character: ICharacter) => void;
@@ -22,11 +19,16 @@ export const CharactersContext = createContext<ICharactersContext>({} as ICharac
 
 export const CharactersProvider = ({ children }: { children: React.ReactNode }) => {
     const [ value, dispatch ] = useReducer(charactersReducer, charactersInitialState);
-    
-    const { data, loading } = useQuery(
+    const isFavoritesPage = value.showFavoritesPage;
+
+    const { data } = useQuery(
         GET_CHARACTERS,
         {
-            variables: { CharacterName: value.searchByName, Page: value.exploreCurrentPage }
+            skip: isFavoritesPage,
+            variables: { 
+                CharacterName: value.exploreSearch, 
+                Page: value.exploreCurrentPage 
+            },
         }
     );
 
@@ -35,7 +37,8 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
     );
 
     const handleChangeExplorePage = useCallback(
-        (e: React.ChangeEvent<unknown>, page: number) => dispatch({ type: "CHANGE_EXPLORE_PAGE", payload: page }), []
+        (e: React.ChangeEvent<unknown>, page: number) => 
+            dispatch({ type: "CHANGE_EXPLORE_PAGE", payload: page }), []
     );
     
     const handleChangeFavoritesPage = useCallback(
@@ -82,3 +85,7 @@ export const CharactersProvider = ({ children }: { children: React.ReactNode }) 
         </CharactersContext.Provider>
     )
 } 
+
+
+// Only for tests
+export const useCharactersTest = () => useContext(CharactersContext);

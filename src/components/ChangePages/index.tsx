@@ -9,17 +9,14 @@ import "./styles.css";
 interface IChangePageComponentProps {
     showFavoritePage: boolean; 
     favoriteCharacters: ICharacter[];
-    handleChangeSearchByName: (nameToSearch: string) => void;
     handleChangeShowFavoritesPage: (isToShow: boolean) => void; 
 }
 
 function ChangePageComponent({ 
     showFavoritePage, 
     favoriteCharacters,
-    handleChangeSearchByName, 
     handleChangeShowFavoritesPage,
     }: IChangePageComponentProps) {
-    const { handleSelectFilter } = useSearch()
 
     return (
         <div className="flex justify-between mb-6">
@@ -32,9 +29,7 @@ function ChangePageComponent({
                     disabled={!showFavoritePage}
                     type="button" 
                     onClick={() => {
-                        handleChangeSearchByName("")
                         handleChangeShowFavoritesPage(false)
-                        handleSelectFilter("All")
                     }}
                 >
                     <FaArrowLeft size={20} className="arrow-icon" />
@@ -49,9 +44,7 @@ function ChangePageComponent({
                     disabled={!favoriteCharacters?.length && !showFavoritePage || showFavoritePage}
                     type="button" 
                     onClick={() => {
-                        handleChangeSearchByName("")
                         handleChangeShowFavoritesPage(true)
-                        handleSelectFilter("All")
                     }}
                 >
                     <h1>Favorites</h1>

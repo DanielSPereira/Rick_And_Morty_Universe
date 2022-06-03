@@ -15,7 +15,6 @@ import "./styles.css"
 export function CardsList() {    
     const [isModalOpen, setIsModalOpen] = useState(false);
     
-    const { handleSearchByName } = useSearch();
     const { characters, favoritesPagePagination } = useCharacters();
     const { showFavoritesPage, handleChangeShowFavoritesPage } = useNavigation();
 
@@ -31,9 +30,8 @@ export function CardsList() {
         <div className="content container-content pb-12 mt-20 md:mt-16">
             <ChangePage 
                 showFavoritePage={showFavoritesPage}
-                handleChangeSearchByName={handleSearchByName} 
-                handleChangeShowFavoritesPage={handleChangeShowFavoritesPage}
                 favoriteCharacters={favoritesPagePagination}
+                handleChangeShowFavoritesPage={handleChangeShowFavoritesPage}
             />
             
             {
