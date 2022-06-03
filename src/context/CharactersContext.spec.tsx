@@ -1,4 +1,4 @@
-import { act, renderHook } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react";
 import { MockedProvider } from "@apollo/client/testing";
 
 import { CharactersProvider, useCharactersTest } from "./CharactersContext";
@@ -41,15 +41,19 @@ const mocks = [
 
 
 describe("Characters Context", () => {
-    beforeEach(() => {
-      jest.mock("../helpers/createFIlters", () => {
-        return {
-          createFilters() {
-            return ["All"]
-          }
-        }
-      })
-    })
+    const character = {
+      id: "1",
+      name: "Rick",
+      status: "Alive",
+      species: "Human",
+      image: "imagem",
+      created: "january 2, 2015",
+      episode: [{ id: "1", name: "first ep" }],
+      location: {
+          id: "1",
+          name: "first location"
+      }
+    }
 
     it("should add new character to favorite list", async () => {
         const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -62,21 +66,6 @@ describe("Characters Context", () => {
             wrapper
         })
 
-        const character = {
-          id: "1",
-          name: "Rick",
-          status: "Alive",
-          species: "Human",
-          image: "imagem",
-          created: "january 2, 2015",
-          episode: [{ id: "1", name: "first ep" }],
-          location: {
-              id: "1",
-              name: "first location"
-          }
-        }
-
-        // TODO
         act(() => result.current.handleAddFavoriteCharacter(character));
 
         expect(result.current.favoriteCharacters).toStrictEqual(
@@ -95,6 +84,26 @@ describe("Characters Context", () => {
               }
             }
           ])
+        );
+    });
+    
+    it("should remove character from favorite list", async () => {
+        const wrapper = ({ children }: { children: React.ReactNode }) => (
+                <MockedProvider mocks={mocks} addTypename={false}>
+                    <CharactersProvider>{children}</CharactersProvider>
+                </MockedProvider>
+        );
+
+        const { result } = renderHook(() => useCharactersTest(), {
+            wrapper
+        });
+
+        act(() => result.current.handleAddFavoriteCharacter(character));
+
+        act(() => result.current.handleAddFavoriteCharacter(character));
+
+        expect(result.current.favoriteCharacters).toStrictEqual(
+          expect.arrayContaining([])
         );
     });
 });
