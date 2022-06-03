@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 import { MockedProvider } from "@apollo/client/testing";
 
 import { CharactersProvider, useCharactersTest } from "./CharactersContext";
@@ -62,8 +62,39 @@ describe("Characters Context", () => {
             wrapper
         })
 
-        console.log(result.current)
+        const character = {
+          id: "1",
+          name: "Rick",
+          status: "Alive",
+          species: "Human",
+          image: "imagem",
+          created: "january 2, 2015",
+          episode: [{ id: "1", name: "first ep" }],
+          location: {
+              id: "1",
+              name: "first location"
+          }
+        }
 
         // TODO
+        act(() => result.current.handleAddFavoriteCharacter(character));
+
+        expect(result.current.favoriteCharacters).toStrictEqual(
+          expect.arrayContaining([
+            {
+              id: "1",
+              name: "Rick",
+              status: "Alive",
+              species: "Human",
+              image: "imagem",
+              created: "january 2, 2015",
+              episode: [{ id: "1", name: "first ep" }],
+              location: {
+                  id: "1",
+                  name: "first location"
+              }
+            }
+          ])
+        );
     });
 });
