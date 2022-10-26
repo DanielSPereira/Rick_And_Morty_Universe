@@ -1,5 +1,5 @@
 ## Rick And Morty Demostration
-![Project image](https://github.com/DanielSPereira/Rick_And_Morty_Universe/blob/master/pj.png?raw=true)
+![Project image](./public/pj.png?raw=true)
 
 ## This is a simple POC about what would be an implementation with the following technologies:
 - [NextJS](https://nextjs.org/)
