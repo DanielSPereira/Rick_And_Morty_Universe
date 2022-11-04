@@ -18,10 +18,10 @@ export function Filters() {
             <h1>Filters:</h1>
             
             <FiltersList
-                selectSpecie={(filter: string) => dispatch(page === "all" ? selectSpecie(filter) : selectFavoriteSpecie(filter))}
-                species={page === "all" ? species : favoritesSpecies} 
-                selectedSpecies={page === "all" ? selectedSpecies : selectedFavoritesSpecies} 
+                data={page === "all" ? species : favoritesSpecies} 
                 isLoading={isLoading} 
+                selectSpecie={(filter: string) => dispatch(page === "all" ? selectSpecie(filter) : selectFavoriteSpecie(filter))}
+                selectedSpecies={page === "all" ? selectedSpecies : selectedFavoritesSpecies} 
             />
         </Categories>
     )

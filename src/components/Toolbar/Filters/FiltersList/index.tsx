@@ -1,22 +1,22 @@
 import React from "react";
-import { filtersWithLoaderHOC } from "@/utils/HOC/filtersWithLoaderHOC";
-import { List, CustomButton } from "./styles"
+import FilterSkeletonLoad from "../Skeleton";
+import { List, CustomButton } from "./styles";
+import { withLoader } from "@/utils/HOC/withLoader";
 
-export type FiltersListProps = { 
-    filters: Array<string>; 
+//-------------------------------------------------------
+
+export interface IFiltersListProps extends Partial<JSX.Element> { 
+    data: Array<string>; 
     selectedSpecies: Array<string>;
     selectSpecie: (specie: string) => void;
-}
+};
 
-const FiltersList = ({ 
-    filters, 
-    selectedSpecies,
-    selectSpecie,
-}: FiltersListProps ) => {    
+//-------------------------------------------------------
 
+const FiltersList = ({ data, selectedSpecies, selectSpecie }: IFiltersListProps ) => {    
     return (
         <List>
-            {filters?.map(filter => (
+            {data?.map(filter => (
                 <CustomButton
                     key={filter}
                     data-testid={filter + '-filter'}
@@ -27,7 +27,6 @@ const FiltersList = ({
             ))}
         </List>
     )
-}
+};
 
-export type FiltersListType = typeof FiltersList;
-export default filtersWithLoaderHOC(FiltersList);
+export default withLoader<string, IFiltersListProps>(FiltersList, FilterSkeletonLoad);
