@@ -1,12 +1,22 @@
 import { CharacterCard } from "@/components/CharacterCard";
-import { charactersWithLoaderHOC } from "@/utils/HOC/charactersWithLoaderHOC";
+import { withLoader } from "@/utils/HOC/withLoader";
 import { Character } from "@/types/character";
 import { CardsWrapper } from "../styles";
+import { CardSkeletonLoad } from "@/components/CharacterCard/Skeleton";
 
-const List = ({ characters, handleOpenModal }: { characters: Character[]; handleOpenModal: () => void }) => {
+//----------------------------------------------------------------
+
+interface IListProps extends Partial<JSX.Element> {
+    data: Character[]; 
+    handleOpenModal: () => void;
+}
+
+//----------------------------------------------------------------
+
+const List = ({ data, handleOpenModal }: IListProps) => {
     return (
         <CardsWrapper>
-            {characters.map((character, idx) => (
+            {data.map((character, idx) => (
                 <CharacterCard
                     key={character.name + idx}
                     character={character} 
@@ -17,5 +27,4 @@ const List = ({ characters, handleOpenModal }: { characters: Character[]; handle
     )
 }
 
-export type ListType = typeof List;
-export default charactersWithLoaderHOC(List)
+export default withLoader<Character, IListProps>(List, CardSkeletonLoad)
